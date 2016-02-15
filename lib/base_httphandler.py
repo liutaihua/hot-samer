@@ -201,7 +201,8 @@ class BaseHandler(tornado.web.RequestHandler):
 
     # platform apis, support sina, renren, douban
     def get_current_user(self):
-        return self.session.get('username')
+        return None
+        # return self.session.get('username')
 
     def get_user_id(self):
         return self.session.get('me').id

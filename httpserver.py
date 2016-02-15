@@ -28,8 +28,9 @@ class HotSamerHandler(BaseHandler):
     @gen.coroutine
     def get(self):
         offset = int(self.get_argument('offset', 0)) * 100
-        sql = 'select photo from same/user_ugc where (channel_id=1033563 or channel_id=1228982 or channel_id=1228982)' \
-              ' order by timestamp desc limit 100 offset %s' % offset
+        sql = 'select photo, author_uid, author_name channel_id, views, likes ' \
+              'from same/user_ugc where (channel_id=1033563 or channel_id=1228982 or channel_id=1228982) ' \
+              'order by timestamp desc limit 100 offset %s' % offset
         # resp = requests.get('http://localhost:9200/_sql?sql=%s' % sql)
         # if resp.status_code != 200:
         #     return self.finish('')
@@ -43,19 +44,38 @@ class HotSamerHandler(BaseHandler):
         self.set_header('Access-Control-Allow-Origin', '*')
         photo_list = []
         for i in resp['hits']['hits']:
-            photo_url = i['_source']['photo']
-            if not photo_url:
+            photo_info = i['_source']
+            if not photo_info.get('photo'):
                 continue
-            photo_list.append(photo_url)
+            photo_list.append(photo_info)
         self.write(json.dumps(photo_list))
+        # self.write(json.dumps(resp['hits']['hits']))
         self.finish()
         raise gen.Return()
 
-        # return self.finish(json.dumps(photo_list))
+from same_spider.secret import header
+
+class SamerProfileHandler(BaseHandler):
+    @gen.coroutine
+    def get(self, uid):
+        fetch_url = 'https://v2.same.com/user/%s/profile' % uid
+        resp = yield self.fetch_url(fetch_url, headers=header)
+        resp = json.loads(resp.body)
+        if resp['code'] != 0:
+            # self.write(json.dumps({}))
+            profile = {}
+        else:
+            # self.write(json.dumps(resp))
+            profile = resp
+        # self.finish()
+        self.render('user.html', profile=profile['data']['user'])
+        raise gen.Return()
+
 
 handlers = [
     (r"/", MainHandler),
     (r"/hot-samer", HotSamerHandler),
+    (r"/samer/(\d+)", SamerProfileHandler),
 ]
 
 settings = dict(

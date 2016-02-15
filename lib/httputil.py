@@ -57,7 +57,7 @@ def set_response_info(response, code=400, body=u"外部服务器错误",
 @gen.coroutine
 def fetch_and_trace_response(
         request_url, body=None, method="GET", description=None,
-        username=None, connect_timeout=2, request_timeout=8):
+        username=None, connect_timeout=2, request_timeout=8, headers=None):
     """
     获取一个response，如果请求成功返回response，同时记录日志，如果请求失败，
     抛出错误：
@@ -73,7 +73,7 @@ def fetch_and_trace_response(
         body = json.dumps(body)
     request = OutRequest(
         request_url, body=body, method=method, request_timeout=request_timeout,
-        connect_timeout=connect_timeout)
+        connect_timeout=connect_timeout, headers=headers)
     try:
         response = yield client.fetch(request)
     except HTTPError as e:

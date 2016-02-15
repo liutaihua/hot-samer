@@ -3,21 +3,38 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Hot-Samer</title>
-<style>
-body{text-align:center;}
-.list{margin-bottom:40px;}
+    <style>
+        body {
+            text-align: center;
+        }
 
-.all-img{
-width:400px;
-margin:0 auto;
-border:1px solid red;
-}
-.all-img img{
-float:left;
-width:100px;
-}
+        div.img {
+            margin: 3px;
+            border: 1px solid #bebebe;
+            height: auto;
+            width: auto;
+            float: left;
+            text-align: center;
+        }
 
-</style>
+        div.img img {
+            display: inline;
+            margin: 3px;
+            border: 1px solid #bebebe;
+        }
+
+        div.img a:hover img {
+            border: 1px solid #333333;
+        }
+
+        div.desc {
+            text-align: center;
+            font-weight: normal;
+            width: 150px;
+            font-size: 12px;
+            margin: 10px 5px 10px 5px;
+        }
+    </style>
 
 <script type = "text/javascript"
    src = "/static/js/jquery.min.js"></script>
@@ -27,27 +44,22 @@ width:100px;
     <div>
         <h1>hot-samer</h1>
         <div id="content">
-    			<script type="text/javascript">
-              $.ajaxSetup({async: false});
-    			    var main = "";
-    			    for (var i = 0; i < 10; i++) {
-    			        // // main += '<img class="scrollLoading" xSrc="http://images.cnblogs.com/cnblogs_com/Darren_code/311197/o_' + i + '.jpg" src="http://images.cnblogs.com/cnblogs_com/Darren_code/302725/o_pixel.gif" style="background:url(http://images.cnblogs.com/cnblogs_com/Darren_code/302725/o_108.gif) no-repeat center;" /></div>';
-                  // $.get('http://localhost:8080/hot-samer?offset='+i, function(data){
-                  //   main += '<img class="scrollLoading" xSrc="' + data + '" src="http://images.cnblogs.com/cnblogs_com/Darren_code/302725/o_pixel.gif" style="background:url(http://images.cnblogs.com/cnblogs_com/Darren_code/302725/o_108.gif) no-repeat center;" /></div>';
-                  // });
-
-                  $.getJSON('/hot-samer?offset='+i, function(data) {
-                    $.each(data, function(key, val) {
-                      if (val !== '') {
-//                        main += '<img class="scrollLoading" xSrc="' + val + '" src="http://images.cnblogs.com/cnblogs_com/Darren_code/302725/o_pixel.gif" weight=512 height=256 style="background:url(http://images.cnblogs.com/cnblogs_com/Darren_code/302725/o_108.gif) no-repeat center;" /></div>';
-
-                        main += '<a target="_blank" href="' + val + '"> <img class="scrollLoading" xSrc="' + val + '" src="/static/image/ajax-loader.gif" weight=512 height=256 style="background:url(http://images.cnblogs.com/cnblogs_com/Darren_code/302725/o_108.gif) no-repeat center;" /></a></div>';
-                      }
+            <script type="text/javascript">
+                $.ajaxSetup({async: false});
+                var main = "";
+                for (var i = 0; i < 10; i++) {
+                    $.getJSON('/hot-samer?offset=' + i, function (data) {
+                        $.each(data, function (key, val) {
+//                            alert('====='+val['photo'])
+                            if (val !== '') {
+//                                main += '<div class="img"><a target="_blank" href="' + val['photo'] + '"> <img class="scrollLoading" xSrc="' + val['photo'] + '" src="/static/image/ajax-loader.gif" weight=512 height=256 style="background:url(http://images.cnblogs.com/cnblogs_com/Darren_code/302725/o_108.gif) no-repeat center;" /></a><div class="desc">在此处添加对图像的描述</div></div>';
+                                main += '<a target="_blank" href="/samer/' + val['author_uid'] + '"> <img class="scrollLoading" xSrc="' + val['photo'] + '" src="/static/image/ajax-loader.gif" weight=512 height=256 style="background:url(http://images.cnblogs.com/cnblogs_com/Darren_code/302725/o_108.gif) no-repeat center;" /></a>';
+                            }
+                        });
                     });
-                  });
-              }
-    			    document.getElementById("content").innerHTML = main;
-    			</script>
+                }
+              document.getElementById("content").innerHTML = main;
+            </script>
         </div>
     </div>
 </div>
