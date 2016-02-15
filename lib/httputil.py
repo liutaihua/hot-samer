@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import simplejson
+import json
 
 from tornado.httpclient import HTTPError
 from tornado.httpclient import HTTPRequest as OutRequest
@@ -70,7 +70,7 @@ def fetch_and_trace_response(
     if method:
         method = method.upper()
     if isinstance(body, dict):
-        body = simplejson.dumps(body)
+        body = json.dumps(body)
     request = OutRequest(
         request_url, body=body, method=method, request_timeout=request_timeout,
         connect_timeout=connect_timeout)
