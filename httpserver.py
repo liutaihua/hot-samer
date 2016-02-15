@@ -25,13 +25,25 @@ class MainHandler(tornado.web.RequestHandler):
         self.set_header('Access-Control-Allow-Origin', '*')
         return self.render('index.html')
 
+class SortSensesHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.set_header('Access-Control-Allow-Origin', '*')
+        return self.render('index_senses_sorted.html')
+
+
 class HotSamerHandler(BaseHandler):
     @gen.coroutine
     def get(self):
+        sort_by_likes = self.get_argument('by_likes', None)
         offset = int(self.get_argument('offset', 0)) * 100
         sql = 'select photo, author_uid, author_name channel_id, views, likes ' \
-              'from same/user_ugc where (channel_id=1033563 or channel_id=1228982 or channel_id=1228982) ' \
-              'order by timestamp desc limit 100 offset %s' % offset
+              'from same/user_ugc where (channel_id=1033563 or channel_id=1228982 or channel_id=1228982) '
+        if sort_by_likes:
+            time_condition = datetime.datetime.now() - datetime.timedelta(days=3)
+            sort_condition = 'and timestamp> "%s" order by likes desc limit 100 offset %s' % (time_condition.isoformat(), offset)
+        else:
+            sort_condition = 'order by timestamp desc limit 100 offset %s' % offset
+        sql += sort_condition
         # resp = requests.get('http://localhost:9200/_sql?sql=%s' % sql)
         # if resp.status_code != 200:
         #     return self.finish('')
@@ -81,6 +93,7 @@ class SamerProfileHandler(BaseHandler):
 
 handlers = [
     (r"/", MainHandler),
+    (r"/senses", SortSensesHandler),
     (r"/hot-samer", HotSamerHandler),
     (r"/samer/(\d+)", SamerProfileHandler),
     (r'/favicon.ico', tornado.web.StaticFileHandler,dict(url='/static/favicon.ico',permanent=False)),

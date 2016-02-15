@@ -43,13 +43,13 @@
 <div>
     <div>
         <h1>hot-samer</h1>
-        <h5><a href="senses">按同感数</a></h5>
+        <h5><a href="/">按时间</a></h5>
         <div id="content">
             <script type="text/javascript">
                 $.ajaxSetup({async: false});
                 var main = "";
                 for (var i = 0; i < 10; i++) {
-                    $.getJSON('/hot-samer?offset=' + i, function (data) {
+                    $.getJSON('/hot-samer?by_likes=1&offset=' + i, function (data) {
                         $.each(data, function (key, val) {
 //                            alert('====='+val['photo'])
                             if (val !== '') {
