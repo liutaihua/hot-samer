@@ -82,6 +82,7 @@ handlers = [
     (r"/", MainHandler),
     (r"/hot-samer", HotSamerHandler),
     (r"/samer/(\d+)", SamerProfileHandler),
+    (r'/favicon.ico', tornado.web.StaticFileHandler,dict(url='/static/favicon.ico',permanent=False)),
 ]
 
 settings = dict(
