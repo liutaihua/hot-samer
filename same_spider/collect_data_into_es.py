@@ -214,10 +214,10 @@ if __name__ == "__main__":
         # 你拍我画频道
         collect_single_channel_data(1312542)
     elif sys.argv[1] == 'get_x':
-        collect_single_channel_data(1032823, 86400*90) # tui
+        collect_single_channel_data(1032823, 86400*1) # tui
 
-        collect_single_channel_data(1033563, 86400*30) # xinggan
-        collect_single_channel_data(1228982, 86400*90) # pingru
+        collect_single_channel_data(1033563, 86400*1) # xinggan
+        collect_single_channel_data(1228982, 86400*1) # pingru
 
     elif sys.argv[1] == 'get_profile':
         gs = []

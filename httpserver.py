@@ -25,7 +25,8 @@ class MainHandler(tornado.web.RequestHandler):
 class HotSamerHandler(tornado.web.RequestHandler):
     def get(self):
         offset = int(self.get_argument('offset', 0)) * 100
-        sql = 'select photo from same/user_ugc where channel_id=1033563 order by timestamp limit 100 offset %s' % offset
+        sql = 'select photo from same/user_ugc where (channel_id=1033563 or channel_id=1228982 or channel_id=1228982)' \
+              ' order by timestamp desc limit 100 offset %s' % offset
         resp = requests.get('http://localhost:9200/_sql?sql=%s' % sql)
         if resp.status_code != 200:
             return self.finish('')
