@@ -4,7 +4,10 @@
 import sys
 import gevent
 import requests
-requests.packages.urllib3.disable_warnings()
+import platform
+
+if platform.system() == 'Darwin':
+    requests.packages.urllib3.disable_warnings()
 import json
 from gevent import monkey
 monkey.patch_all()
