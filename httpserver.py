@@ -60,15 +60,18 @@ class SamerProfileHandler(BaseHandler):
     def get(self, uid):
         fetch_url = 'https://v2.same.com/user/%s/profile' % uid
         resp = yield self.fetch_url(fetch_url, headers=header)
-        resp = json.loads(resp.body)
-        if resp['code'] != 0:
+        data = {'code': 500}
+        if resp.code == 200:
+            data = json.loads(resp.body)
+        if data['code'] != 0:
             # self.write(json.dumps({}))
             profile = {}
         else:
             # self.write(json.dumps(resp))
-            profile = resp
+            profile = data['data']['user']
+        # print profile, resp.code
         # self.finish()
-        self.render('user.html', profile=profile['data']['user'])
+        self.render('user.html', profile=profile)
         raise gen.Return()
 
 

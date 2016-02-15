@@ -44,6 +44,9 @@
     <div>
         <h1>hot-samer</h1>
         <div id="content">
+            {% if not profile %}
+                <p> Same 服务器忙</p>
+            {% else %}
             <a href="{{ profile['avatar'] }}" target="_blank">
                 <img src="{{ profile['avatar'] }}" width=128 height=128 alt=""/>
             </a>
@@ -52,6 +55,7 @@
             <p>加入时间: {{ profile['join_at'] }}</p>
             <p>频道数: {{ profile['channels'] }}</p>
             <p>同感数: {{ profile['senses'] }}</p>
+            {% end %}
         </div>
     </div>
 </div>
