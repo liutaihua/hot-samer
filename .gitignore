@@ -1,3 +1,4 @@
 .idea
 *.pyc
 *.un~
+same_spider/secret.py
