@@ -19,8 +19,13 @@ from lib.base_httphandler import BaseHandler
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
+        self.set_header('Access-Control-Allow-Origin', '*')
+        return self.render('index.html')
+
+class HotSamerHandler(tornado.web.RequestHandler):
+    def get(self):
         offset = int(self.get_argument('offset', 0)) * 100
-        sql = 'select photo from same/user_ugc where channel_id=1033563 limit 100 offset %s' % offset
+        sql = 'select photo from same/user_ugc where channel_id=1033563 order by timestamp limit 100 offset %s' % offset
         resp = requests.get('http://localhost:9200/_sql?sql=%s' % sql)
         if resp.status_code != 200:
             return self.finish('')
@@ -31,10 +36,9 @@ class MainHandler(tornado.web.RequestHandler):
             photo_list.append(i['_source']['photo'])
         return self.finish(json.dumps(photo_list))
 
-
 handlers = [
     (r"/", MainHandler),
-    (r"/hot-samer", MainHandler),
+    (r"/hot-samer", HotSamerHandler),
 ]
 
 settings = dict(
