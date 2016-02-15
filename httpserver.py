@@ -6,6 +6,7 @@ import json
 import sys
 import requests
 import urllib2
+import datetime
 
 import tornado
 import tornado.web
@@ -71,6 +72,8 @@ class SamerProfileHandler(BaseHandler):
             profile = data['data']['user']
         # print profile, resp.code
         # self.finish()
+        if 'join_at' in profile:
+            profile['join_at'] = datetime.datetime.fromtimestamp(int(profile['join_at'])).strftime('%Y-%m-%d %H:%M:%S')
         self.render('user.html', profile=profile)
         raise gen.Return()
 
