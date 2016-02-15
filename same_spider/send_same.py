@@ -128,7 +128,7 @@ if __name__ == "__main__":
         print len(get_user_senses(int(sys.argv[2])))
     else:
         gs = []
-        for product_id in [747, 748,749,750]:
-            for i in range(10):
+        for product_id in range(860, 870):
+            for i in range(3):
                 gs.append(gevent.spawn(send, product_id))
         gevent.joinall(gs)

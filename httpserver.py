@@ -5,6 +5,7 @@ import os
 import json
 import sys
 import requests
+import urllib2
 
 import tornado
 import tornado.web
@@ -14,6 +15,7 @@ import tornado.httpserver
 import tornado.autoreload
 import tornado.ioloop
 from lib import session
+from tornado import gen
 from lib.base_httphandler import BaseHandler
 
 
@@ -22,20 +24,34 @@ class MainHandler(tornado.web.RequestHandler):
         self.set_header('Access-Control-Allow-Origin', '*')
         return self.render('index.html')
 
-class HotSamerHandler(tornado.web.RequestHandler):
+class HotSamerHandler(BaseHandler):
+    @gen.coroutine
     def get(self):
         offset = int(self.get_argument('offset', 0)) * 100
         sql = 'select photo from same/user_ugc where (channel_id=1033563 or channel_id=1228982 or channel_id=1228982)' \
               ' order by timestamp desc limit 100 offset %s' % offset
-        resp = requests.get('http://localhost:9200/_sql?sql=%s' % sql)
-        if resp.status_code != 200:
-            return self.finish('')
-        resp = json.loads(resp.text)
+        # resp = requests.get('http://localhost:9200/_sql?sql=%s' % sql)
+        # if resp.status_code != 200:
+        #     return self.finish('')
+        # resp = json.loads(resp.text)
+        arg = urllib2.quote(sql)
+        fetch_url = 'http://localhost:9200/_sql?sql=%s' % arg
+
+        # yield self.fetch_and_redirect(fetch_url)
+        resp = yield self.fetch_url(fetch_url)
+        resp = json.loads(resp.body)
         self.set_header('Access-Control-Allow-Origin', '*')
         photo_list = []
         for i in resp['hits']['hits']:
-            photo_list.append(i['_source']['photo'])
-        return self.finish(json.dumps(photo_list))
+            photo_url = i['_source']['photo']
+            if not photo_url:
+                continue
+            photo_list.append(photo_url)
+        self.write(json.dumps(photo_list))
+        self.finish()
+        raise gen.Return()
+
+        # return self.finish(json.dumps(photo_list))
 
 handlers = [
     (r"/", MainHandler),

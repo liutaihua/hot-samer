@@ -5,12 +5,20 @@ import tornado.httpclient
 
 import os
 import re
+import json
 import urllib2
 
 
 from urlparse import urljoin
 from tornado.options import options
+from tornado.httpclient import HTTPError
+from tornado import gen
+from tornado.log import app_log
 
+
+
+from lib.httputil \
+    import (set_response_info, wrap_response_body, fetch_and_trace_response, get_request_time)
 
 import session
 
@@ -28,7 +36,167 @@ class BaseHandler(tornado.web.RequestHandler):
     def __init__(self, *argc, **argkw):
         super(BaseHandler, self).__init__(*argc, **argkw)
         self.path = ''
-        self.session = session.TornadoSession(self.application.session_manager, self)
+        # self.session = session.TornadoSession(self.application.session_manager, self)
+
+    @gen.coroutine
+    def fetch_and_redirect(self, fetch_url, **kwargs):
+        """处了fetch_url,其他的必须使用kwargs传递"""
+        try:
+            response = yield fetch_and_trace_response(fetch_url, **kwargs)
+        except HTTPError as e:
+            yield self.handle_fetch_exception(e, fetch_url)
+            raise gen.Return()
+
+        yield self.response_redirect(
+            response.code, body=response.body,
+            content_type=response.headers.get("Content-Type", None))
+        raise gen.Return()
+
+    @gen.coroutine
+    def fetch_url(self, fetch_url, **kwargs):
+        try:
+            response = yield fetch_and_trace_response(fetch_url, **kwargs)
+        except HTTPError as e:
+            yield self.handle_fetch_exception(e, fetch_url)
+            raise gen.Return()
+        raise gen.Return(response)
+
+    @gen.coroutine
+    def handle_fetch_exception(self, exception, fetch_url=""):
+        """处理fetch一个url的时候返回的错误，这个里面可能会response"""
+        if (not hasattr(exception, "code")) \
+                or (not hasattr(exception, "response")):
+            app_log.error(
+                u"调用handle_fetch_exception出错，这个对象没有code于response属性")
+            yield self.response_msg(400, 4001, u"服务器内部错误, exception没有code或者response属性")
+            raise gen.Return()
+
+        request_time = get_request_time(exception)
+        err_msg = u"调用%s出错,外部服务器错误,http状态码: %s,错误消息: %s, request_time: [%sms]" \
+                  % (fetch_url, exception.code, exception.message, request_time*1000)
+
+        if exception.code == 599:
+            # 这里不能使用599，599不在标准里面
+            app_log.error(err_msg)
+            yield self.response_msg(400, 1001, u"[外部服务器连接失败]-%s" % err_msg)
+            raise gen.Return()
+        elif exception.code == 600:
+            app_log.error(u"[可能是socket错误]-%s" % err_msg)
+            yield self.response_msg(400, 1001, u"[外部服务器连接失败]-%s" % err_msg)
+            raise gen.Return()
+        elif exception.code == 404:
+            app_log.error(err_msg)
+            yield self.response_msg(404, 1001, err_msg)
+            raise gen.Return()
+        elif exception.code == 405:
+            app_log.error(err_msg)
+            yield self.response_msg(405, 1001, err_msg)
+            raise gen.Return()
+        elif exception.code >= 500:
+            app_log.error(err_msg)
+            yield self.response_msg(400, 1001, err_msg)
+            raise gen.Return()
+
+        response = exception.response
+        try:
+            response = set_response_info(response)
+        except AttributeError:
+            # 如果服务器返回500可以运行到这里，此时response为None
+            yield self.response_msg(400, 1004, u"外部服务器错误: %s" % fetch_url)
+            raise gen.Return()
+
+        # 因为是调用外部服务器，如果外部服务器返回错误，改写返回的code为1003
+        # 原服务器的code保存在 _code的key里面
+        yield self.response_redirect(response.code, 1003, response.body)
+        raise gen.Return()
+
+
+    @gen.coroutine
+    def response_redirect(self, status_code=200, data_code=None, body=None,
+                          content_type=None):
+        """这个函数一般用于转发其他服务器的返回值
+        返回body的内容
+        status_code: 响应的状态码
+        body: 响应的内容， 字典或者字符串
+        content_type: 返回的类型
+        data_code: 如果这个值存在，改写body里面的code值，同时保留一个副本在_code里面
+        """
+        if content_type:
+            self.set_header("Content-Type", content_type)
+
+        if not body:  # 这里直接返回
+            yield self._response(status_code)
+            raise gen.Return()
+
+        if data_code:
+            # 转换和验证body的格式
+            if isinstance(body, (unicode, str)):
+                try:
+                    body = json.loads(body)
+                except ValueError:
+                    pass
+            elif isinstance(body, dict):
+                pass
+            else:
+                app_log.error(u"body 格式错误： %s" % repr(body))
+                yield self.response_msg(400, 4001, u"服务器错误")
+                raise gen.Return()
+
+            # 有code值才会改写
+            if isinstance(body, dict):
+                if ("code" in body) and (body["code"] != 0):
+                    body["_code"] = body["code"]
+                    body["code"] = data_code
+
+        yield self._response(status_code, body)
+
+
+    @gen.coroutine
+    def response_msg(self, status_code=200, data_code=0, content=None):
+        """
+        返回一个{"code": data_code, "msg": content}，对session做了处理，
+        本来打算改写finish的，但是系统内部的finish是同步的，你懂的
+        status_code: 响应的状态码
+        content: 响应的内容
+        data_code: {"code": data_code}
+        """
+        if not content:  # 这里直接返回
+            yield self._response(status_code)
+            raise gen.Return()
+
+        if not isinstance(content, (unicode, str)):
+            app_log.error(
+                "In response_msg: content: %s is not a valid string!"
+                % repr(content))
+            self.set_status(400)
+            content = wrap_response_body(
+                4001, msg=u"内部服务器错误，返回错误的msg类型")
+        else:
+            content = wrap_response_body(data_code, msg=content)
+
+        yield self._response(status_code, content)
+
+
+    @gen.coroutine
+    def _response(self, status_code=200, content=None):
+        yield self._update_session()
+        self.set_status(status_code)
+        if content:
+            self.write(content)
+        self.finish()
+        raise gen.Return()
+
+
+    @gen.coroutine
+    def _update_session(self):
+        pass
+        # 如果是匿名的session就不保存了
+        # if "username" in self.session:
+        #     self.set_cookie("username", self.session["username"])
+        #     yield self.session.save()
+
+        # self.set_secure_cookie("session_id", self.session.get("session_id"))
+        # self.set_cookie("socket_id", self.session.get("session_id"))
 
 
     # platform apis, support sina, renren, douban
