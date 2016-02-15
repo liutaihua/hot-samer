@@ -14,17 +14,17 @@ monkey.patch_all()
 header = {
     'Accept-Language': 'zh-Hans-CN;q=1, en-CN;q=0.9',
     'timezone':	'Asia/Shanghai',
-    'Advertising-UUID': '3FA4E87E-0BC6-456B-9418-A3BF6B60A306',
-    'User-Agent': 'same-appstore2/400 (iPhone; iOS 9.2.1; Scale/2.00)',
+    'Advertising-UUID': '46B24E66-8AAB-4C69-BC77-948493BA11F3',
+    'User-Agent': 'same-appstore2/407 (iPhone; iOS 9.2.1; Scale/2.00)',
     'Proxy-Connection': 'keep-alive',
     'Accept': 'application/json',
     'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
-    'Machine': 'ios|301|iPhone OS 9.2.1|iPhone|640|1096',
-    'X-same-Device-UUID': 'FF9B6ABE-8872-4F30-ABAC-F2D5A5F98F5D',
+    'Machine': 'ios|301|iPhone OS 9.2.1|iPhone|750|1294',
+    'X-same-Device-UUID': '398A194F-0F9E-4623-8989-288604567ABC',
     'encode_type': 'json',
     'Connection': 'keep-alive',
     #'Authorization': 'Token 1453861675-3c1c8c4bf2f99639-4306380',
-    'X-Same-Request-ID': 'D7B623C1-103D-4F6D-B9D0-8ADC98E1D961',
+    'X-Same-Request-ID': '22DA6CBE-5E47-481A-9A5F-B437E0468229',
     'Accept-Encoding': 'gzip, deflate'
 }
 
@@ -62,7 +62,7 @@ def yangmao():
 
 def get_user_profile(uid):
     url = 'https://v2.same.com/user/%s/profile' % uid
-    header['Authorization'] = 'Token 1453861675-3c1c8c4bf2f99639-4306380'
+    header['Authorization'] = 'Token 1455147818-7fcb17ce32356c1d-4306380'
     try:
         print url
         res = requests.get(url, verify=False, headers=header)
@@ -70,9 +70,10 @@ def get_user_profile(uid):
         if int(data.get('code', 1)) == 0:
             return data['data']
         else:
+            print 'incorrect response:', data
             return {}
     except ValueError as e:
-        print 'res ValueError',e, url, res.text
+        print 'res ValueError',e, url
     except Exception, e:
         print '-------------err:', e, url
 
@@ -95,7 +96,7 @@ def get_user_senses_and_next_url(uid, next_uri=None):
         url = 'https://v2.same.com' + next_uri
     else:
         url = 'https://v2.same.com/user/%s/senses' % uid
-    header['Authorization'] = 'Token 1453861675-3c1c8c4bf2f99639-4306380'
+    header['Authorization'] = 'Token 1455114002-6afe7b646cf156ca-4306380'
     try:
         print url
         res = requests.get(url, verify=False, headers=header)

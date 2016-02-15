@@ -36,14 +36,14 @@ def get_multi_rank_likes(cid, pages=10):
             results_list.extend(data.get('data', {}).get('results', []))
         except Exception, e:
             print 'parse err', e, url
-        gevent.sleep(random.randint(1,3))
+        # gevent.sleep(random.randint(1,3))
     return results_list
 
 def collect_likes_rank_data(cid):
     bulk_list = []
     results_list = get_multi_rank_likes(cid)
     print 'got data done, cid: %s, data len: %s' %(cid, len(results_list))
-    gevent.sleep(random.randint(1,2))
+    # gevent.sleep(random.randint(1,2))
     for ugc in results_list:
         if 'photo' not in ugc:
             continue
@@ -100,15 +100,18 @@ def collect_profile_data(uid):
     now = time.time()
     max_interval = 86400 * 30 * 12
     profile = get_user_profile(uid)
-    gevent.sleep(0.1)
+    # gevent.sleep(0.1)
     if not profile or not profile.get('user'):
         print 'not profile data', uid
         return
-    recent_ugc_times = collect_user_recent_ugc(uid)
-    gevent.sleep(0.1)
+    # recent_ugc_times = collect_user_recent_ugc(uid)
+    # gevent.sleep(0.1)
     # if now - int(float(last_sense.get('created_at', 0))) > max_interval:
-    if recent_ugc_times < 1:
-        print 'skip user', uid
+    # if recent_ugc_times < 1:
+    #     print 'skip user', uid
+    #     return
+    if int(profile['user']['senses']) < 1 or int(profile['user']['channels']) < 3:
+        # 没有给过别人同感和频道数过少的, 就skip算了
         return
     body = profile['user']
     # body = {
@@ -122,7 +125,8 @@ def collect_profile_data(uid):
     #     'author_name': r['user']['username'],
     #     'author_id': r['user']['id'],
     # }
-    body['ugc_times'] = recent_ugc_times
+    # body['ugc_times'] = recent_ugc_times
+    body['ugc_times'] = 0
     body['timestamp'] = datetime.datetime.fromtimestamp(body.get('created_at', time.time()))
     return body
     # try:
@@ -138,12 +142,17 @@ def collect_profile_data_multi(uids):
         if source:
             bulk_list.append({
                 "_index": "same",
-                "_type": "user_ugc",
+                "_type": "user_profile",
                 "_id": source['id'],
                 "_source": source
             })
+        # gevent.sleep(0.05)
+        # if len(bulk_list) % 1000 == 0:
+        #     print bulk_list
+        #     print 'collect profile count:', helpers.bulk(es, bulk_list)
+        #     bulk_list = []
     if bulk_list:
-        print 'had collect profile count: %s' % helpers.bulk(es, bulk_list)
+        print 'had collect profile count:', helpers.bulk(es, bulk_list)
 
 
 def insert_ugc_into_es(result_list):
@@ -181,7 +190,7 @@ def collect_single_channel_data(cid, max_expire=3600):
             if time.time() - int(float(result_list[-1]['created_at'])) > max_expire:
                 break
         recent_ugc_list.extend(result_list)
-        gevent.sleep(0.1)
+        # gevent.sleep(0.1)
         if len(recent_ugc_list) % 1000 == 0:
             insert_ugc_into_es(recent_ugc_list)
             recent_ugc_list = []
@@ -204,20 +213,19 @@ if __name__ == "__main__":
     elif sys.argv[1] == 'get_zipai':
         # 你拍我画频道
         collect_single_channel_data(1312542)
-    elif sys.argv[1] == 'get_tui':
-        # 你拍我画频道
-        collect_single_channel_data(1032823, 86400*90)
     elif sys.argv[1] == 'get_x':
+        collect_single_channel_data(1032823, 86400*90) # tui
+
         collect_single_channel_data(1033563, 86400*30) # xinggan
         collect_single_channel_data(1228982, 86400*90) # pingru
 
     elif sys.argv[1] == 'get_profile':
         gs = []
         offset = 1000
-        init_uid = 4000000
-        while init_uid < 4100000:
+        init_uid = 4500000
+        while init_uid < 4510000:
             gs.append(gevent.spawn(collect_profile_data_multi, range(init_uid, init_uid+offset)))
             init_uid += offset
-        print 'start gevent done'
+        print 'start gevent done, count:%d'%len(gs)
         gevent.joinall(gs)
 
