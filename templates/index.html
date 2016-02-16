@@ -50,9 +50,7 @@
                 for (var i = 0; i < 10; i++) {
                     $.getJSON('/hot-samer?offset=' + i, function (data) {
                         $.each(data, function (key, val) {
-//                            alert('====='+val['photo'])
                             if (val !== '') {
-//                                main += '<div class="img"><a target="_blank" href="' + val['photo'] + '"> <img class="scrollLoading" xSrc="' + val['photo'] + '" src="/static/image/ajax-loader.gif" weight=512 height=256 style="background:url(http://images.cnblogs.com/cnblogs_com/Darren_code/302725/o_108.gif) no-repeat center;" /></a><div class="desc">在此处添加对图像的描述</div></div>';
                                 main += '<a target="_blank" href="/samer/' + val['author_uid'] + '"> <img class="scrollLoading" xSrc="' + val['photo'] + '" src="/static/image/ajax-loader.gif" weight=512 height=256 style="background:url(/static/image/ajax-loader.gif) no-repeat center;" /></a>';
                             }
                         });
