@@ -21,7 +21,7 @@
                 $.ajaxSetup({async: false});
                 var main = "";
                 for (var i = 0; i < 10; i++) {
-                    $.getJSON('/hot-samer?by_likes=1&limit=1000&offset=' + i, function (data) {
+                    $.getJSON('/hot-samer?by_likes=1&limit=500&offset=' + i, function (data) {
                         $.each(data, function (key, val) {
                             if (val !== '') {
                                 main += '<a target="_blank" href="/samer/' + val['author_uid'] + '"> <img class="scrollLoading" xSrc="' + val['photo'] + '" src="/static/image/ajax-loader.gif" weight=512 height=256 style="background:url(/static/image/ajax-loader.gif) no-repeat center;" /></a>';
