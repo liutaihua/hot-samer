@@ -20,7 +20,7 @@ from secret import header, cookies
 
 def send(product_id):
     data = {'address_id': 53036, 'product_id': product_id}
-    header['Authorization'] = 'Token ' + sys.argv[1]
+    #header['Authorization'] = 'Token ' + sys.argv[1]
     while True:
         try:
             res = requests.post('https://payment.ohsame.com/order_create', headers=header, cookies=cookies, verify=False, data=data)
@@ -109,7 +109,7 @@ if __name__ == "__main__":
         print get_user_profile(int(sys.argv[2]))
     else:
         gs = []
-        for product_id in range(860, 870):
+        for product_id in range(870, 900):
             for i in range(3):
                 gs.append(gevent.spawn(send, product_id))
         gevent.joinall(gs)

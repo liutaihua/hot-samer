@@ -49,6 +49,10 @@ class HotSamerHandler(BaseHandler):
         fetch_url = 'http://localhost:9200/_sql?sql=%s' % arg
 
         resp = yield self.fetch_url(fetch_url)
+        if not resp:
+            self.write(json.dumps([]))
+            self.finish()
+            raise gen.Return
         resp = json.loads(resp.body)
         self.set_header('Access-Control-Allow-Origin', '*')
         photo_list = []
