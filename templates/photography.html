@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Hot-Samer</title>
+    <style type="text/css">
+        body {
+            text-align: center;
+        }
+        #container
+        {
+            height: 600px;
+            overflow: scroll;
+        }
+    </style>
+
+<script type = "text/javascript" src = "/static/js/jquery.min.js"></script>
+<script src="/static/js/jquery.lazyload.js" type="text/javascript"></script>
+</head>
+<body>
+<div>
+    <div>
+        <h1>hot-samer</h1>
+        <h5><a href="/senses">最热</a> <a href="/fun">好玩</a> <a href="/photography">影像</a> <a href="/others">其他</a></h5>
+        <div id="container">
+            <script type="text/javascript">
+                $.ajaxSetup({async: false});
+                var main = "";
+                $.getJSON('/hot-samer?offset=0&limit=500&hot_level=2', function (data) {
+                    $.each(data, function (key, val) {
+                        main += '<a target="_blank" href="/samer/' + val['author_uid'] + '"><img class="lazy" data-original="' + val['photo'] + '" src="/static/image/ajax-loader.gif" weight=512 height=256 /></a>';
+                    });
+                });
+              document.getElementById("container").innerHTML = main;
+            </script>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $(function () {
+            $("img.lazy").lazyload({
+//                    event: "sporty",
+                effect: "fadeIn",
+                effectTime: 200,
+                threshold: 200
+            });
+        });
+        $(window).bind("load", function () {
+            var timeout = setTimeout(function () {
+                $("img.lazy").trigger("sporty")
+            }, 5000);
+        });
+    });
+</script>
+</body>
+</html>
