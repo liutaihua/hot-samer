@@ -71,7 +71,7 @@ class SamerProfileHandler(BaseHandler):
     @gen.coroutine
     def get(self, uid):
         fetch_url = 'https://v2.same.com/user/%s/profile' % uid
-        resp = yield self.fetch_url(fetch_url, headers=header)
+        resp = yield self.fetch_url(fetch_url, skip_except_handle=True, headers=header)
         data = {'code': 500}
         profile = {}
         if resp:

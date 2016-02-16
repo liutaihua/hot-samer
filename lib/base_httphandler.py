@@ -53,11 +53,12 @@ class BaseHandler(tornado.web.RequestHandler):
         raise gen.Return()
 
     @gen.coroutine
-    def fetch_url(self, fetch_url, **kwargs):
+    def fetch_url(self, fetch_url, skip_except_handle=False, **kwargs):
         try:
             response = yield fetch_and_trace_response(fetch_url, **kwargs)
         except HTTPError as e:
-            yield self.handle_fetch_exception(e, fetch_url)
+            if not skip_except_handle:
+                yield self.handle_fetch_exception(e, fetch_url)
             raise gen.Return()
         raise gen.Return(response)
 
