@@ -44,6 +44,11 @@ class FunIndex(tornado.web.RequestHandler):
         return self.render('fun.html')
 
 
+class PhotographyIndex(tornado.web.RequestHandler):
+    def get(self):
+        self.set_header('Access-Control-Allow-Origin', '*')
+        return self.render('photography.html')
+
 class OthersIndex(tornado.web.RequestHandler):
     def get(self):
         self.set_header('Access-Control-Allow-Origin', '*')
@@ -63,8 +68,9 @@ class HotSamerHandler(BaseHandler):
 
         channel_ids = {
             '0': [1033563,1228982,1228982], # 默认腿, 性感, 贫乳3个频道
-            '1': [1312542],
-            '2': [967, 1021852, 1276224, 1099203],
+            '1': [1312542], # 拍画频道
+            '2': [1002974, 1001617, 1187908],  # iphone摄影和instagrammer 频道
+            '3': [967, 1021852, 1276224, 1099203], # 普通自拍
         }[hot_level]
         query_condition = ''
         for cid in channel_ids:
@@ -165,6 +171,7 @@ handlers = [
     (r"/hot-samer", HotSamerHandler),
     (r"/samer/(\d+)", SamerProfileHandler),
     (r"/fun", FunIndex),
+    (r"/photography", PhotographyIndex),
     (r"/others", OthersIndex),
     # (r"/delivery", MsgIndex),
     # (r"/delivery/(\d+)", DeliveryMessageHandler),

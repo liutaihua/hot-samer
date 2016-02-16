@@ -224,6 +224,11 @@ if __name__ == "__main__":
         for cid in [1032823, 1033563, 1228982, 1312542, 967, 1021852, 1276224, 1099203]:
             collect_single_channel_data(cid, 86400*1)
             collect_likes_rank_data(cid)
+    elif sys.argv[1] == 'get_photography':
+        for cid in [1002974, 1001617, 1187908]:  # iphone摄影和instagrammer 频道,影子频道
+            collect_single_channel_data(cid, 86400*1)
+            collect_likes_rank_data(cid)
+
     elif sys.argv[1] == 'get_profile':
         gs = []
         offset = 1000
