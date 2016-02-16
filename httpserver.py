@@ -36,22 +36,18 @@ class HotSamerHandler(BaseHandler):
     def get(self):
         sort_by_likes = self.get_argument('by_likes', None)
         offset = int(self.get_argument('offset', 0)) * 100
+        limit = int(self.get_argument('limit', 100))
         sql = 'select photo, author_uid, author_name channel_id, views, likes ' \
               'from same/user_ugc where (channel_id=1033563 or channel_id=1228982 or channel_id=1228982) '
         if sort_by_likes:
             time_condition = datetime.datetime.now() - datetime.timedelta(days=3)
-            sort_condition = 'and timestamp> "%s" order by likes desc limit 100 offset %s' % (time_condition.isoformat(), offset)
+            sort_condition = 'and timestamp> "%s" order by likes desc limit %d offset %s' % (time_condition.isoformat(), limit, offset)
         else:
-            sort_condition = 'order by timestamp desc limit 100 offset %s' % offset
+            sort_condition = 'order by timestamp desc limit %d offset %s' % (limit, offset)
         sql += sort_condition
-        # resp = requests.get('http://localhost:9200/_sql?sql=%s' % sql)
-        # if resp.status_code != 200:
-        #     return self.finish('')
-        # resp = json.loads(resp.text)
         arg = urllib2.quote(sql)
         fetch_url = 'http://localhost:9200/_sql?sql=%s' % arg
 
-        # yield self.fetch_and_redirect(fetch_url)
         resp = yield self.fetch_url(fetch_url)
         resp = json.loads(resp.body)
         self.set_header('Access-Control-Allow-Origin', '*')
@@ -62,7 +58,6 @@ class HotSamerHandler(BaseHandler):
                 continue
             photo_list.append(photo_info)
         self.write(json.dumps(photo_list))
-        # self.write(json.dumps(resp['hits']['hits']))
         self.finish()
         raise gen.Return()
 
@@ -74,17 +69,12 @@ class SamerProfileHandler(BaseHandler):
         fetch_url = 'https://v2.same.com/user/%s/profile' % uid
         resp = yield self.fetch_url(fetch_url, headers=header)
         data = {'code': 500}
+        profile = {}
         if resp:
             if resp.code == 200:
                 data = json.loads(resp.body)
-        if data['code'] != 0:
-            # self.write(json.dumps({}))
-            profile = {}
-        else:
-            # self.write(json.dumps(resp))
+        if data['code'] == 0:
             profile = data['data']['user']
-        # print profile, resp.code
-        # self.finish()
         if 'join_at' in profile:
             profile['join_at'] = datetime.datetime.fromtimestamp(int(profile['join_at'])).strftime('%Y-%m-%d %H:%M:%S')
         self.render('user.html', profile=profile)
