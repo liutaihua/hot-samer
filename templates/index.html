@@ -3,64 +3,67 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Hot-Samer</title>
-    <style>
+    <style type="text/css">
         body {
             text-align: center;
         }
-
-        div.img {
-            margin: 3px;
-            border: 1px solid #bebebe;
-            height: auto;
-            width: auto;
-            float: left;
-            text-align: center;
-        }
-
-        div.img img {
-            display: inline;
-            margin: 3px;
-            border: 1px solid #bebebe;
-        }
-
-        div.img a:hover img {
-            border: 1px solid #333333;
-        }
-
-        div.desc {
-            text-align: center;
-            font-weight: normal;
-            width: 150px;
-            font-size: 12px;
-            margin: 10px 5px 10px 5px;
+        #container
+        {
+            height: 600px;
+            overflow: scroll;
         }
     </style>
 
 <script type = "text/javascript" src = "/static/js/jquery.min.js"></script>
+<script src="/static/js/jquery.lazyload.js" type="text/javascript"></script>
+<script src="/static/js/jquery.jscroll.js" type="text/javascript"></script>
 </head>
 <body>
 <div>
     <div>
         <h1>hot-samer</h1>
         <h5><a href="senses">hottest</a></h5>
-        <div id="content">
+        <div id="container">
+            <a href="example-page2.html">next page</a>
             <script type="text/javascript">
                 $.ajaxSetup({async: false});
                 var main = "";
-//                for (var i = 0; i < 10; i++) {
-                    $.getJSON('/hot-samer?offset=1&limit=1000', function (data) {
-                        $.each(data, function (key, val) {
-                            if (val !== '') {
-                                main += '<a target="_blank" href="/samer/' + val['author_uid'] + '"> <img class="scrollLoading" xSrc="' + val['photo'] + '" src="/static/image/ajax-loader.gif" weight=512 height=256 style="background:url(/static/image/ajax-loader.gif) no-repeat center;" /></a>';
-                            }
-                        });
+                $.getJSON('/hot-samer?offset=1&limit=2000', function (data) {
+                    $.each(data, function (key, val) {
+                        main += '<a target="_blank" href="/samer/' + val['author_uid'] + '"><img class="lazy" data-original="' + val['photo'] + '" src="/static/image/ajax-loader.gif" weight=512 height=256 /></a>';
                     });
-//                }
-              document.getElementById("content").innerHTML = main;
+                });
+              document.getElementById("container").innerHTML = main;
             </script>
         </div>
     </div>
 </div>
-<script type="text/javascript" src="/static/js/scroll-load.js"></script>
+<!--<script type="text/javascript">-->
+    <!--$("img.lazy").lazyload({-->
+          <!--effect: "fadeIn",-->
+          <!--effectTime: 2000,-->
+          <!--threshold: 0-->
+    <!--});-->
+<!--</script>-->
+
+<!--<script type="text/javascript" src="/static/js/scroll-load.js"></script>-->
+
+<script type="text/javascript">
+    $(function () {
+        $(function () {
+            $("img.lazy").lazyload({
+//                    event: "sporty",
+                effect: "fadeIn",
+                effectTime: 200,
+                threshold: 200
+            });
+        });
+        $(window).bind("load", function () {
+            var timeout = setTimeout(function () {
+                $("img.lazy").trigger("sporty")
+            }, 5000);
+        });
+    });
+</script>
 </body>
 </html>
