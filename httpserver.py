@@ -6,6 +6,7 @@ import json
 import sys
 import requests
 import urllib2
+import random
 import datetime
 
 import tornado
@@ -30,6 +31,10 @@ class SortSensesHandler(tornado.web.RequestHandler):
         self.set_header('Access-Control-Allow-Origin', '*')
         return self.render('index_senses_sorted.html')
 
+class MsgIndex(tornado.web.RequestHandler):
+    def get(self):
+        self.set_header('Access-Control-Allow-Origin', '*')
+        return self.render('delivery_msg.html')
 
 class HotSamerHandler(BaseHandler):
     @gen.coroutine
@@ -84,12 +89,48 @@ class SamerProfileHandler(BaseHandler):
         self.render('user.html', profile=profile)
         raise gen.Return()
 
+def random_with_N_digits(n):
+    range_start = 10**(n-1)
+    range_end = (10**n)-1
+    return random.randint(range_start, range_end)
+
+class DeliveryMessageHandler(BaseHandler):
+    @gen.coroutine
+    def post(self, to_uid):
+        # fuid = self.get_argument('uid')
+        name = self.get_argument('name')
+        msg = self.get_argument('msg')
+        fetch_url = 'https://im-xs.same.com/imuser/sendPmsg'
+        seq = random_with_N_digits(8)
+        fuid = '4306380'
+        msg = u'有Samer在 http://hot-samer.club 给您托句话:' + msg
+        body = {
+            "cmd": "smsg",
+            "op": 1,
+            "body": {
+                "sender_name": name or "未知",
+                # "seq": "36303127",
+                "seq": seq,
+                "tuid": to_uid,
+                "msg": msg,
+                "fuid": fuid,
+                "type": 1
+            }
+        }
+        resp = yield self.fetch_url(fetch_url, skip_except_handle=True, method="POST", headers=header, body=body)
+        # resp = requests.post(fetch_url, headers=header, json=body, verify=False)
+        if resp:
+            self.write(json.dumps(resp.body))
+            self.finish()
+        raise gen.Return()
 
 handlers = [
     (r"/", MainHandler),
     (r"/senses", SortSensesHandler),
     (r"/hot-samer", HotSamerHandler),
     (r"/samer/(\d+)", SamerProfileHandler),
+    # (r"/delivery", MsgIndex),
+    # (r"/delivery/(\d+)", DeliveryMessageHandler),
     (r'/favicon.ico', tornado.web.StaticFileHandler,dict(url='/static/favicon.ico',permanent=False)),
 ]
 
