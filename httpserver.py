@@ -64,7 +64,7 @@ class HotSamerHandler(BaseHandler):
         hot_level = self.get_argument('hot_level', '0')
 
         sql = "select photo, author_uid, author_name channel_id, views, likes " \
-              "from same/user_ugc WHERE ("
+              "from same/user_ugc"
 
         channel_ids = {
             '0': [1033563,1228982,1228982], # 默认腿, 性感, 贫乳3个频道
@@ -72,11 +72,7 @@ class HotSamerHandler(BaseHandler):
             '2': [1002974, 1001617, 1187908],  # iphone摄影和instagrammer 频道
             '3': [967, 1021852, 1276224, 1099203], # 普通自拍
         }[hot_level]
-        query_condition = ''
-        for cid in channel_ids:
-            query_condition += 'or channel_id=%s '%str(cid)
-        query_condition = query_condition.lstrip('or')
-        query_condition += ')'
+        query_condition = ' WHERE channel_id in (%s)' % ','.join(map(str, channel_ids))
         sql += query_condition
 
         if sort_by_likes:

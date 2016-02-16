@@ -24,11 +24,11 @@
             <a href="{{ profile['avatar'] }}" target="_blank">
                 <img src="{{ profile['avatar'] }}" width=128 height=128 alt="Ballade"/>
             </a>
+            <p>频道数: {{ profile['channels'] }}</p>
+            <p>同感数: {{ profile['senses'] }}</p>
             <p>名字: {{ profile['username'] }}</p>
             <p>坐标: {{ profile['timezone'] }}</p>
             <p>加入时间: {{ profile['join_at'] }}</p>
-            <p>频道数: {{ profile['channels'] }}</p>
-            <p>同感数: {{ profile['senses'] }}</p>
             {% end %}
         </div>
     </div>
