@@ -23,7 +23,7 @@ es = Elasticsearch()
 monkey.patch_all()
 
 
-def get_multi_rank_likes(cid, pages=10):
+def get_multi_rank_likes(cid, pages=3):
     results_list = []
     for page in range(pages):
         if page == 0:
