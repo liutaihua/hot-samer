@@ -26,7 +26,7 @@
             <script type="text/javascript">
                 $.ajaxSetup({async: false});
                 var main = "";
-                $.getJSON('/hot-samer?offset=1&limit=1000', function (data) {
+                $.getJSON('/hot-samer?offset=0&limit=1000', function (data) {
                     $.each(data, function (key, val) {
                         main += '<a target="_blank" href="/samer/' + val['author_uid'] + '"><img class="lazy" data-original="' + val['photo'] + '" src="/static/image/ajax-loader.gif" weight=512 height=256 /></a>';
                     });
@@ -36,15 +36,6 @@
         </div>
     </div>
 </div>
-<!--<script type="text/javascript">-->
-    <!--$("img.lazy").lazyload({-->
-          <!--effect: "fadeIn",-->
-          <!--effectTime: 2000,-->
-          <!--threshold: 0-->
-    <!--});-->
-<!--</script>-->
-
-<!--<script type="text/javascript" src="/static/js/scroll-load.js"></script>-->
 
 <script type="text/javascript">
     $(function () {
