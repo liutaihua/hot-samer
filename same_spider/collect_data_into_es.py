@@ -219,6 +219,8 @@ if __name__ == "__main__":
         collect_single_channel_data(1033563, 86400*1) # xinggan
         collect_single_channel_data(1228982, 86400*1) # pingru
 
+        for cid in [1032823, 1033563, 1228982]:
+            collect_likes_rank_data(cid)
     elif sys.argv[1] == 'get_profile':
         gs = []
         offset = 1000
