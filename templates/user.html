@@ -49,7 +49,11 @@
                     {% if 'txt' in new %}
                     <p>{{ new['txt'] }}</p>
                     {% end %}
-                    <!--<p>likes {{ new['likes'] }}</p>-->
+
+                    {% if new['likes'] > 0 %}
+                    <p>likes {{ new['likes'] }}</p>
+                    {% end %}
+
                     <p>频道 {{ new['channel']['name'] }}</p>
                     <p>{{ new['created_at'] }}</p>
                     <p>-------------------------------------------------</p>
