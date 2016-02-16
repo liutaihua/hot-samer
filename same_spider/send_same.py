@@ -109,7 +109,7 @@ if __name__ == "__main__":
         print get_user_profile(int(sys.argv[2]))
     else:
         gs = []
-        for product_id in range(870, 900):
+        for product_id in range(865, 870):
             for i in range(3):
                 gs.append(gevent.spawn(send, product_id))
         gevent.joinall(gs)
