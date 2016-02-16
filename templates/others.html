@@ -21,12 +21,12 @@
 <div>
     <div>
         <h1>hot-samer</h1>
-        <h5><a href="senses">最热</a>     <a href="fun">好玩</a>        <a href="others">其他</a></h5>
+        <h5><a href="/">返回</a></h5>
         <div id="container">
             <script type="text/javascript">
                 $.ajaxSetup({async: false});
                 var main = "";
-                $.getJSON('/hot-samer?offset=0&limit=1000', function (data) {
+                $.getJSON('/hot-samer?offset=0&limit=500&hot_level=2', function (data) {
                     $.each(data, function (key, val) {
                         main += '<a target="_blank" href="/samer/' + val['author_uid'] + '"><img class="lazy" data-original="' + val['photo'] + '" src="/static/image/ajax-loader.gif" weight=512 height=256 /></a>';
                     });

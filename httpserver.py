@@ -26,15 +26,29 @@ class MainHandler(tornado.web.RequestHandler):
         self.set_header('Access-Control-Allow-Origin', '*')
         return self.render('index.html')
 
+
 class SortSensesHandler(tornado.web.RequestHandler):
     def get(self):
         self.set_header('Access-Control-Allow-Origin', '*')
-        return self.render('index_senses_sorted.html')
+        return self.render('likes_sort.html')
+
 
 class MsgIndex(tornado.web.RequestHandler):
     def get(self):
         self.set_header('Access-Control-Allow-Origin', '*')
         return self.render('delivery_msg.html')
+
+class FunIndex(tornado.web.RequestHandler):
+    def get(self):
+        self.set_header('Access-Control-Allow-Origin', '*')
+        return self.render('fun.html')
+
+
+class OthersIndex(tornado.web.RequestHandler):
+    def get(self):
+        self.set_header('Access-Control-Allow-Origin', '*')
+        return self.render('others.html')
+
 
 class HotSamerHandler(BaseHandler):
     @gen.coroutine
@@ -42,11 +56,27 @@ class HotSamerHandler(BaseHandler):
         sort_by_likes = self.get_argument('by_likes', None)
         offset = int(self.get_argument('offset', 0)) * 100
         limit = int(self.get_argument('limit', 100))
-        sql = 'select photo, author_uid, author_name channel_id, views, likes ' \
-              'from same/user_ugc where (channel_id=1033563 or channel_id=1228982 or channel_id=1228982) '
+        hot_level = self.get_argument('hot_level', '0')
+
+        sql = "select photo, author_uid, author_name channel_id, views, likes " \
+              "from same/user_ugc WHERE ("
+
+        channel_ids = {
+            '0': [1033563,1228982,1228982], # 默认腿, 性感, 贫乳3个频道
+            '1': [1312542],
+            '2': [967, 1021852, 1276224, 1099203],
+        }[hot_level]
+        query_condition = ''
+        for cid in channel_ids:
+            query_condition += 'or channel_id=%s '%str(cid)
+        query_condition = query_condition.lstrip('or')
+        query_condition += ')'
+        sql += query_condition
+
         if sort_by_likes:
             time_condition = datetime.datetime.now() - datetime.timedelta(days=3)
-            sort_condition = 'and timestamp> "%s" order by likes desc limit %d offset %s' % (time_condition.isoformat(), limit, offset)
+            sort_condition = 'and timestamp> "%s" order by likes desc limit %d offset %s' % (
+            time_condition.isoformat(), limit, offset)
         else:
             sort_condition = 'order by timestamp desc limit %d offset %s' % (limit, offset)
         sql += sort_condition
@@ -70,7 +100,9 @@ class HotSamerHandler(BaseHandler):
         self.finish()
         raise gen.Return()
 
+
 from same_spider.secret import header
+
 
 class SamerProfileHandler(BaseHandler):
     @gen.coroutine
@@ -89,10 +121,12 @@ class SamerProfileHandler(BaseHandler):
         self.render('user.html', profile=profile)
         raise gen.Return()
 
+
 def random_with_N_digits(n):
-    range_start = 10**(n-1)
-    range_end = (10**n)-1
+    range_start = 10 ** (n - 1)
+    range_end = (10 ** n) - 1
     return random.randint(range_start, range_end)
+
 
 class DeliveryMessageHandler(BaseHandler):
     @gen.coroutine
@@ -124,14 +158,17 @@ class DeliveryMessageHandler(BaseHandler):
             self.finish()
         raise gen.Return()
 
+
 handlers = [
     (r"/", MainHandler),
     (r"/senses", SortSensesHandler),
     (r"/hot-samer", HotSamerHandler),
     (r"/samer/(\d+)", SamerProfileHandler),
+    (r"/fun", FunIndex),
+    (r"/others", OthersIndex),
     # (r"/delivery", MsgIndex),
     # (r"/delivery/(\d+)", DeliveryMessageHandler),
-    (r'/favicon.ico', tornado.web.StaticFileHandler,dict(url='/static/favicon.ico',permanent=False)),
+    (r'/favicon.ico', tornado.web.StaticFileHandler, dict(url='/static/favicon.ico', permanent=False)),
 ]
 
 settings = dict(

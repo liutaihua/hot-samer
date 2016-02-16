@@ -214,12 +214,15 @@ if __name__ == "__main__":
         # 你拍我画频道
         collect_single_channel_data(1312542)
     elif sys.argv[1] == 'get_x':
-        collect_single_channel_data(1032823, 86400*1) # tui
-
-        collect_single_channel_data(1033563, 86400*1) # xinggan
-        collect_single_channel_data(1228982, 86400*1) # pingru
-
-        for cid in [1032823, 1033563, 1228982]:
+        # collect_single_channel_data(1032823, 86400*1) # tui
+        #
+        # collect_single_channel_data(1033563, 86400*1) # xinggan
+        # collect_single_channel_data(1228982, 86400*1) # pingru
+        # 1021852 每天生活拍照片频道
+        # 1276224 我发照片你来点赞
+        # 1099203 眼镜自拍
+        for cid in [1032823, 1033563, 1228982, 1312542, 967, 1021852, 1276224, 1099203]:
+            collect_single_channel_data(cid, 86400*1)
             collect_likes_rank_data(cid)
     elif sys.argv[1] == 'get_profile':
         gs = []
