@@ -6,6 +6,8 @@ import gevent
 import requests
 import platform
 
+from secret import header
+
 if platform.system() == 'Darwin':
     requests.packages.urllib3.disable_warnings()
 import json
@@ -19,7 +21,7 @@ def get_channels_ids_with_cate_id(cate_id, offset=None):
         url = 'https://v2.same.com/channels/cate/%s' % cate_id
     try:
         print url
-        res = requests.get(url, verify=False)
+        res = requests.get(url, verify=False, headers=header)
         data = json.loads(res.text)
         result = data['data']['results']
         return [i['id'] for i in result]
@@ -33,7 +35,7 @@ def get_photo_url_with_channel_id(channel_id, next_uri=None):
     else:
         url = 'https://v2.same.com/channel/%s/senses' % channel_id
     try:
-        res = requests.get(url, verify=False)
+        res = requests.get(url, verify=False, headers=header)
         data = json.loads(res.text)
         result = data['data']['results']
         if not result:

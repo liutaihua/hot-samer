@@ -15,7 +15,7 @@ from spider_same import get_channels_ids_with_cate_id
 from spider_same import get_photo_url_with_channel_id
 from send_same import get_user_profile
 from send_same import get_user_recent_ugc_list
-
+from secret import header
 
 es = Elasticsearch()
 # es.indices.create(index='same', ignore=400)
@@ -31,7 +31,7 @@ def get_multi_rank_likes(cid, pages=3):
         else:
             url = "https://v2.same.com/activity/senses/channel/%s?order=hostest&from=-30 day&offset=%s" % (cid, page)
         try:
-            res = requests.get(url, verify=False)
+            res = requests.get(url, verify=False, headers=header)
             data = json.loads(res.text)
             results_list.extend(data.get('data', {}).get('results', []))
         except Exception, e:

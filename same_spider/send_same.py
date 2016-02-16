@@ -97,7 +97,7 @@ def get_user_senses_and_next_url(uid, next_uri=None):
 
 def get_activity_senses(cid):
     url = 'http://v2.same.com/activity/senses/channel/1021984?order=hostest&from=-7%20day'
-    requests.get(url, verify=False)
+    requests.get(url, verify=False, headers=header)
 
 if __name__ == "__main__":
     if sys.argv[1] == 'category':

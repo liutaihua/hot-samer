@@ -7,33 +7,6 @@
         body {
             text-align: center;
         }
-
-        div.img {
-            margin: 3px;
-            border: 1px solid #bebebe;
-            height: auto;
-            width: auto;
-            float: left;
-            text-align: center;
-        }
-
-        div.img img {
-            display: inline;
-            margin: 3px;
-            border: 1px solid #bebebe;
-        }
-
-        div.img a:hover img {
-            border: 1px solid #333333;
-        }
-
-        div.desc {
-            text-align: center;
-            font-weight: normal;
-            width: 150px;
-            font-size: 12px;
-            margin: 10px 5px 10px 5px;
-        }
     </style>
 
 <script type = "text/javascript"
@@ -43,19 +16,46 @@
 <div>
     <div>
         <h1>hot-samer</h1>
-        <h5><a href="/senses">最热</a> <a href="/fun">好玩</a> <a href="/photography">影像</a> <a href="/others">其他</a></h5>
+        <h5><a href="/">最新</a> <a href="/senses">最热</a> <a href="/fun">好玩</a> <a href="/photography">影像</a> <a href="/others">其他</a></h5>
         <div id="content">
             {% if not profile %}
                 <p> Same 服务器忙</p>
             {% else %}
             <a href="{{ profile['avatar'] }}" target="_blank">
-                <img src="{{ profile['avatar'] }}" width=128 height=128 alt=""/>
+                <img src="{{ profile['avatar'] }}" width=128 height=128 alt="Ballade"/>
             </a>
             <p>名字: {{ profile['username'] }}</p>
             <p>坐标: {{ profile['timezone'] }}</p>
             <p>加入时间: {{ profile['join_at'] }}</p>
             <p>频道数: {{ profile['channels'] }}</p>
             <p>同感数: {{ profile['senses'] }}</p>
+            {% end %}
+        </div>
+    </div>
+    <div>
+        <h4>Ta的图文动态</h4>
+        <div>
+            {% if not latest_news %}
+            <p>Same 服务器忙</p>
+            {% else %}
+            {% for new in latest_news %}
+                {% if 'photo' in new %}
+                <a href="{{ new['photo'] }}"><img src="{{ new['photo'] }}" weight=512 height=256/></a>
+                {% else %}
+                    {% continue %}
+                {% end %}
+
+                <div>
+                    {% if 'txt' in new %}
+                    <p>{{ new['txt'] }}</p>
+                    {% end %}
+                    <!--<p>likes {{ new['likes'] }}</p>-->
+                    <p>{{ new['created_at'] }}</p>
+                    <p>频道 {{ new['channel']['name'] }}</p>
+                    <p>-------------------------------------------------</p>
+                </div>
+            </div>
+            {% end %}
             {% end %}
         </div>
     </div>

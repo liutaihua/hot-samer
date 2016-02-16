@@ -124,7 +124,19 @@ class SamerProfileHandler(BaseHandler):
             profile = data['data']['user']
         if 'join_at' in profile:
             profile['join_at'] = datetime.datetime.fromtimestamp(int(profile['join_at'])).strftime('%Y-%m-%d %H:%M:%S')
-        self.render('user.html', profile=profile)
+
+        fetch_url = 'https://v2.same.com/user/%s/senses' % uid
+        resp2 = yield self.fetch_url(fetch_url, skip_except_handle=True, headers=header)
+        news_data = {'code': 500}
+        latest_news = []
+        if resp2:
+            if resp2.code == 200:
+                news_data = json.loads(resp2.body)
+        if news_data['code'] == 0:
+            for i in news_data['data']['results']:
+                i['created_at'] = datetime.datetime.fromtimestamp(int(i['created_at'])).strftime('%Y-%m-%d %H:%M:%S')
+                latest_news.append(i)
+        self.render('user.html', profile=profile, latest_news=latest_news)
         raise gen.Return()
 
 
