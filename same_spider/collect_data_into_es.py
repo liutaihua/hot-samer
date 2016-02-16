@@ -222,7 +222,10 @@ if __name__ == "__main__":
         # 1276224 我发照片你来点赞
         # 1099203 眼镜自拍
         for cid in [1032823, 1033563, 1228982, 1312542, 967, 1021852, 1276224, 1099203]:
-            collect_single_channel_data(cid, 86400*1)
+            if cid == 1312542:
+                collect_single_channel_data(cid, 3600) # 这个频道貌似内容太频繁了
+            else:
+                collect_single_channel_data(cid, 86400*1)
             collect_likes_rank_data(cid)
     elif sys.argv[1] == 'get_photography':
         for cid in [1002974, 1001617, 1187908]:  # iphone摄影和instagrammer 频道,影子频道
