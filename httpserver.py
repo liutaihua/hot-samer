@@ -165,7 +165,8 @@ class HotestSamerRankHandler(BaseHandler):
     @gen.coroutine
     def get(self):
         early_time = datetime.datetime.now() - datetime.timedelta(days=7)
-        query_ugc_sql = 'SELECT * FROM same/user_ugc WHERE timestamp>"%s" LIMIT 2000 OFFSET 0' %\
+        query_ugc_sql = 'SELECT * FROM same/user_ugc WHERE timestamp>"%s" AND ' \
+                        'likes>10 ORDER BY timestamp DESC LIMIT 2000 OFFSET 0' %\
                         (early_time.isoformat())
         print query_ugc_sql
         resp = yield self.query_from_es(query_ugc_sql)
