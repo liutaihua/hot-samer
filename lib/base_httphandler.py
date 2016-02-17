@@ -66,6 +66,20 @@ class BaseHandler(tornado.web.RequestHandler):
         raise gen.Return(response)
 
     @gen.coroutine
+    def get_hottest_samer_list_from_es(self):
+        early_time = datetime.datetime.now() - datetime.timedelta(days=7)
+        query_ugc_sql = 'SELECT * FROM same/user_ugc WHERE timestamp>"%s" AND ' \
+                        'likes>3 ORDER BY timestamp DESC LIMIT 2000 OFFSET 0' %\
+                        (early_time.isoformat())
+        print query_ugc_sql
+        resp = yield self.query_from_es(query_ugc_sql)
+        gen.Return(resp)
+
+    @gen.coroutine
+    def save_hottest_samer_list(self, data):
+        pass
+
+    @gen.coroutine
     def get_multi_profile_from_es(self, uids, skip_silence_user=False):
         sql = 'SELECT * FROM same/user_profile WHERE id in (%s)' % ','.join(map(str, uids))
         if skip_silence_user:
