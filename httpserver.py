@@ -168,15 +168,19 @@ class LetterHandler(BaseHandler):
         if resp:
             if resp.code != 200:
                 self.write('发生失败, 可能由于网络或Same服务器问题, 请手动返回')
+                self.flush()
             else:
                 print resp.body
                 # self.write(json.dumps(resp.body))
                 self.write('发生成功, 请手工返回')
+                self.flush()
                 # self.set_status(301)
                 # self.set_header("Location", 'http://localhost:8080/samer/%s'%to_uid)
-                self.flush()
                 # yield gen.Task(IOLoop.instance().add_timeout, time.time() + 5)            # self.finish()
         # self.redirect('/samer/%s' % to_uid)
+        else:
+            self.write('发生失败, 可能由于网络或Same服务器问题, 请手动返回')
+            self.flush()
         raise gen.Return()
 
 
