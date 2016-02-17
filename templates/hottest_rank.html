@@ -2,29 +2,18 @@
 
 {% block body %}
     <div>
-        <div class="title"> <h1>hot-samer</h1> </div>
-        <div class="title">
-            <ul>
-                <li><a href="/">最新</a></li>
-                <li><a href="/senses">最热</a></li>
-                <li><a href="/fun">好玩</a></li>
-                <li><a href="/photography">影像</a></li>
-                <li><a href="/others">其他</a></li>
-                <li><a href="/hottest-rank">周红人</a></li>
-            </ul>
-            <!--<h5><a href="/">最新</a> <a href="/senses">最热</a> <a href="/fun">好玩</a> <a href="/photography">影像</a> <a href="/others">其他</a></h5>-->
-        </div>
         <div>
             {% if not profile_list %}
                 <p> Same 服务器忙</p>
             {% else %}
                 {% for idx, (uid, profile) in enumerate(profile_list) %}
             <li class="p-li">
-                <div style="background: #93d6ef;" class="top-n">{{ idx }}</div>
+                <div style="background: #93d6ef;" class="top-n">{{ idx + 1 }}</div>
                     <a href="/samer/{{ uid }}" target="_blank" title="">
                     <div class="pic left">
                         <img class="img-circle" src="{{ profile['avatar'] }}" width=128 height=128 alt="Ballade"/>
                         <p class="p-tags" >名字: {{ profile['username'] }}</p>
+                        <p class="p-tags" >内容: {{ profile['senses'] }}</p>
                         <p class="p-tags">同感数: {{ profile['likes_count'] }}</p>
                         <p class="p-tags">坐标: {{ profile['timezone'] }}</p>
                         <p class="p-tags">加入时间: {{ profile['join_at'].split()[0] }}</p>

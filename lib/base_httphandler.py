@@ -66,8 +66,10 @@ class BaseHandler(tornado.web.RequestHandler):
         raise gen.Return(response)
 
     @gen.coroutine
-    def get_multi_profile_from_es(self, uids):
+    def get_multi_profile_from_es(self, uids, skip_silence_user=False):
         sql = 'SELECT * FROM same/user_profile WHERE id in (%s)' % ','.join(map(str, uids))
+        if skip_silence_user:
+            sql += ' AND senses > 20'
         resp = yield self.query_from_es(sql)
         profile_list = [i['_source'] for i in json.loads(resp.body)['hits']['hits']]
         data = {}

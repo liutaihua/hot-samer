@@ -2,30 +2,29 @@
 
 {% block body %}
     <div>
-        <div class="title"> <h1>hot-samer</h1> </div>
-        <div class="title">
-            <ul>
-                <li><a href="/">最新</a></li>
-                <li><a href="/senses">最热</a></li>
-                <li><a href="/fun">好玩</a></li>
-                <li><a href="/photography">影像</a></li>
-                <li><a href="/others">其他</a></li>
-                <li><a href="/hottest-rank">周红人</a></li>
-            </ul>
-            <!--<h5><a href="/">最新</a> <a href="/senses">最热</a> <a href="/fun">好玩</a> <a href="/photography">影像</a> <a href="/others">其他</a></h5>-->
-        </div>
         <div id="content" class="title">
             {% if not profile %}
                 <p> Same 服务器忙 或 用户已被注销(假如多次刷新无结果)</p>
             {% else %}
-            <a href="{{ profile['avatar'] }}" target="_blank">
-                <img src="{{ profile['avatar'] }}" width=128 height=128 alt="Ballade"/>
-            </a>
-            <p>频道数: {{ profile['channels'] }}</p>
-            <p>同感数: {{ profile['senses'] }}</p>
-            <p>名字: {{ profile['username'] }}</p>
-            <p>坐标: {{ profile['timezone'] }}</p>
-            <p>加入时间: {{ profile['join_at'] }}</p>
+            <!--<a href="{{ profile['avatar'] }}" target="_blank">-->
+                <!--<img src="{{ profile['avatar'] }}" width=128 height=128 alt="Ballade"/>-->
+            <!--</a>-->
+            <!--<p>频道数: {{ profile['channels'] }}</p>-->
+            <!--<p>同感数: {{ profile['senses'] }}</p>-->
+            <!--<p>名字: {{ profile['username'] }}</p>-->
+            <!--<p>坐标: {{ profile['timezone'] }}</p>-->
+            <!--<p>加入时间: {{ profile['join_at'] }}</p>-->
+            <li class="p-li">
+                    <a href="{{ profile['avatar'] }}" target="_blank" title="">
+                    <div class="pic left">
+                        <img class="img-circle" src="{{ profile['avatar'] }}" width=128 height=128 alt="Ballade"/>
+                        <p class="p-tags" >名字: {{ profile['username'] }}</p>
+                        <p class="p-tags" >内容: {{ profile['senses'] }}</p>
+                        <p class="p-tags">坐标: {{ profile['timezone'] }}</p>
+                        <p class="p-tags">加入时间: {{ profile['join_at'].split()[0] }}</p>
+                    </div>
+                    </a>
+            </li>
             {% end %}
         </div>
     </div>
@@ -45,15 +44,15 @@
                 {% end %}
 
                     {% if 'txt' in new %}
-                    <p>{{ new['txt'] }}</p>
+                    <p class="p-tags-center">{{ new['txt'] }}</p>
                     {% end %}
 
                     {% if new['likes'] > 0 %}
-                    <p>likes {{ new['likes'] }}</p>
+                    <p class="p-tags-center">likes: {{ new['likes'] }}</p>
                     {% end %}
 
-                    <p>频道 {{ new['channel']['name'] }}</p>
-                    <p>{{ new['created_at'] }}</p>
+                    <p class="p-tags-center">频道: {{ new['channel']['name'] }}</p>
+                    <p class="p-tags-center">{{ new['created_at'] }}</p>
                 </div>
             </div>
             {% end %}
