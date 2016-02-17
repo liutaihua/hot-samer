@@ -4,6 +4,7 @@
 import os
 import json
 import sys
+import time
 import requests
 import urllib2
 import random
@@ -18,6 +19,7 @@ import tornado.autoreload
 import tornado.ioloop
 from lib import session
 from tornado import gen
+from tornado.ioloop import IOLoop
 from lib.base_httphandler import BaseHandler
 
 
@@ -164,8 +166,17 @@ class LetterHandler(BaseHandler):
         resp = yield self.fetch_url(fetch_url, skip_except_handle=True, method="POST", headers=header, body=body)
         # resp = requests.post(fetch_url, headers=header, json=body, verify=False)
         if resp:
-            self.write(json.dumps(resp.body))
-            self.finish()
+            if resp.code != 200:
+                self.write('发生失败, 可能由于网络或Same服务器问题, 请手动返回')
+            else:
+                print resp.body
+                # self.write(json.dumps(resp.body))
+                self.write('发生成功, 请手工返回')
+                # self.set_status(301)
+                # self.set_header("Location", 'http://localhost:8080/samer/%s'%to_uid)
+                self.flush()
+                # yield gen.Task(IOLoop.instance().add_timeout, time.time() + 5)            # self.finish()
+        # self.redirect('/samer/%s' % to_uid)
         raise gen.Return()
 
 
