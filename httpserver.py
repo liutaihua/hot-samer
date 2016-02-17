@@ -164,8 +164,8 @@ class DeliveryMessageHandler(BaseHandler):
 class HotestSamerRankHandler(BaseHandler):
     @gen.coroutine
     def get(self):
-        early_time = datetime.datetime.now() - datetime.timedelta(days=30)
-        query_ugc_sql = 'SELECT * FROM same/user_ugc WHERE timestamp>"%s"' %\
+        early_time = datetime.datetime.now() - datetime.timedelta(days=7)
+        query_ugc_sql = 'SELECT * FROM same/user_ugc WHERE timestamp>"%s" LIMIT 2000 OFFSET 0' %\
                         (early_time.isoformat())
         print query_ugc_sql
         resp = yield self.query_from_es(query_ugc_sql)
@@ -175,7 +175,12 @@ class HotestSamerRankHandler(BaseHandler):
                 ugc = ugc['_source']
                 rank_data.setdefault(str(ugc['author_uid']), 0)
                 rank_data[str(ugc['author_uid'])] += int(ugc['likes'])
-        profile_list = yield self.get_multi_profile_from_es(rank_data.keys())
+        uids = rank_data.keys()
+        profile_list = {}
+        if len(uids) > 200:
+            for sub_uids in [uids[i:i+200] for i in range(0, len(uids), 200)]:
+                sub_profile_list = yield self.get_multi_profile_from_es(sub_uids)
+                profile_list.update(sub_profile_list)
         for uid, profile in profile_list.items():
             profile['likes_count'] = rank_data[str(uid)]
         profile_list = sorted(profile_list.items(), key=lambda x:x[1]['likes_count'], reverse=True)
