@@ -6,15 +6,8 @@
             {% if not profile %}
                 <p> Same 服务器忙 或 用户已被注销(假如多次刷新无结果)</p>
             {% else %}
-            <!--<a href="{{ profile['avatar'] }}" target="_blank">-->
-                <!--<img src="{{ profile['avatar'] }}" width=128 height=128 alt="Ballade"/>-->
-            <!--</a>-->
-            <!--<p>频道数: {{ profile['channels'] }}</p>-->
-            <!--<p>同感数: {{ profile['senses'] }}</p>-->
-            <!--<p>名字: {{ profile['username'] }}</p>-->
-            <!--<p>坐标: {{ profile['timezone'] }}</p>-->
-            <!--<p>加入时间: {{ profile['join_at'] }}</p>-->
             <li class="p-li">
+                    <a href="/letter/{{ profile['id'] }}"><div style="background: #93d6ef;" class="top-n">私信</div></a>
                     <a href="{{ profile['avatar'] }}" target="_blank" title="">
                     <div class="pic left">
                         <img class="img-circle" src="{{ profile['avatar'] }}" width=128 height=128 alt="Ballade"/>

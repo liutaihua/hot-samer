@@ -33,10 +33,10 @@ class SortSensesHandler(tornado.web.RequestHandler):
         return self.render('likes_sort.html')
 
 
-class MsgIndex(tornado.web.RequestHandler):
-    def get(self):
+class LetterIndex(tornado.web.RequestHandler):
+    def get(self, uid):
         self.set_header('Access-Control-Allow-Origin', '*')
-        return self.render('delivery_msg.html')
+        return self.render('letter.html', tuid=uid)
 
 class FunIndex(tornado.web.RequestHandler):
     def get(self):
@@ -130,21 +130,25 @@ def random_with_N_digits(n):
     return random.randint(range_start, range_end)
 
 
-class DeliveryMessageHandler(BaseHandler):
+class LetterHandler(BaseHandler):
+    def get(self, uid):
+        self.set_header('Access-Control-Allow-Origin', '*')
+        return self.render('letter.html', tuid=uid)
+
     @gen.coroutine
     def post(self, to_uid):
         # fuid = self.get_argument('uid')
-        name = self.get_argument('name')
+        # name = self.get_argument('name')
         msg = self.get_argument('msg')
         fetch_url = 'https://im-xs.same.com/imuser/sendPmsg'
         seq = random_with_N_digits(8)
         fuid = '4306380'
-        msg = u'有Samer在 http://hot-samer.club 给您托句话:' + msg
+        msg = u'有Samer在 hot-samer.club 给您发匿名私信:' + msg
         body = {
             "cmd": "smsg",
             "op": 1,
             "body": {
-                "sender_name": name or "未知",
+                "sender_name": "匿名",
                 # "seq": "36303127",
                 "seq": seq,
                 "tuid": to_uid,
@@ -198,8 +202,8 @@ handlers = [
     (r"/photography", PhotographyIndex),
     (r"/others", OthersIndex),
     (r"/hottest-rank", HotestSamerRankHandler),
-    # (r"/delivery", MsgIndex),
-    # (r"/delivery/(\d+)", DeliveryMessageHandler),
+    # (r"/letter", LetterIndex),
+    (r"/letter/(\d+)", LetterHandler),
     (r'/favicon.ico', tornado.web.StaticFileHandler, dict(url='/static/favicon.ico', permanent=False)),
 ]
 
