@@ -7,6 +7,7 @@ import os
 import re
 import json
 import urllib2
+import datetime
 
 
 from urlparse import urljoin
@@ -21,10 +22,14 @@ from lib.httputil \
     import (set_response_info, wrap_response_body, fetch_and_trace_response, get_request_time)
 
 import session
+from elasticsearch import Elasticsearch
+from elasticsearch import helpers
+from same_spider.secret import header
 
 
 
 absolute_http_url_re = re.compile(r"^https?://", re.I)
+es = Elasticsearch()
 
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -50,6 +55,68 @@ class BaseHandler(tornado.web.RequestHandler):
         yield self.response_redirect(
             response.code, body=response.body,
             content_type=response.headers.get("Content-Type", None))
+        raise gen.Return()
+
+
+    @gen.coroutine
+    def query_from_es(self, sql):
+        sql = urllib2.quote(sql)
+        fetch_url = 'http://localhost:9200/_sql?sql=%s' % sql
+        response = yield self.fetch_url(fetch_url)
+        raise gen.Return(response)
+
+    @gen.coroutine
+    def get_multi_profile_from_es(self, uids):
+        sql = 'SELECT * FROM same/user_profile WHERE id in (%s)' % ','.join(map(str, uids))
+        resp = yield self.query_from_es(sql)
+        profile_list = [i['_source'] for i in json.loads(resp.body)['hits']['hits']]
+        data = {}
+        for profile in profile_list:
+            profile['join_at'] = datetime.datetime.fromtimestamp(int(profile['join_at'])).strftime('%Y-%m-%d %H:%M:%S')
+            data[profile['id']] = profile
+        raise gen.Return(data)
+
+    @gen.coroutine
+    def get_profile_from_es(self, uid):
+        sql = 'SELECT * FROM same/user_profile WHERE id=%s' % uid
+        resp = yield self.query_from_es(sql)
+        profile = json.loads(resp.body)['hits']['hits']
+        profile = profile[0]['_source'] if profile else {}
+        if profile:
+            profile['join_at'] = datetime.datetime.fromtimestamp(int(profile['join_at'])).strftime('%Y-%m-%d %H:%M:%S')
+        raise gen.Return(profile)
+
+    @gen.coroutine
+    def get_profile_from_same(self, uid):
+        fetch_url = 'https://v2.same.com/user/%s/profile' % uid
+        resp = yield self.fetch_url(fetch_url, skip_except_handle=True, headers=header)
+        data = {'code': 500}
+        profile = {}
+        if resp:
+            if resp.code == 200:
+                data = json.loads(resp.body)
+        if data['code'] == 0:
+            profile = data['data']['user']
+            yield self.save_single_profile(profile)
+            profile['join_at'] = datetime.datetime.fromtimestamp(int(profile['join_at'])).strftime('%Y-%m-%d %H:%M:%S')
+        raise gen.Return(profile)
+
+
+    @gen.coroutine
+    def save_single_profile(self, profile):
+        yield self.save_to_es(index='same', table='user_profile', uuid=profile['id'], data=profile)
+        raise gen.Return()
+
+    @gen.coroutine
+    def save_to_es(self, index, table, uuid, data):
+        es_data = {
+            "_index": index,
+            "_type": table,
+            "id": uuid,
+            '_source': data
+        }
+        res = helpers.bulk(es, [es_data])  # 这里的库不支持异步,忍了
+        print 'save to es result:', res
         raise gen.Return()
 
     @gen.coroutine

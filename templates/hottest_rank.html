@@ -5,7 +5,7 @@
 <title>Hot-Samer</title>
     <style>
         body {
-            text-align: center;
+            text-align: left;
         }
         #container
         {
@@ -73,37 +73,26 @@
             </ul>
             <!--<h5><a href="/">最新</a> <a href="/senses">最热</a> <a href="/fun">好玩</a> <a href="/photography">影像</a> <a href="/others">其他</a></h5>-->
         </div>
-        <div id="container">
-            <script type="text/javascript">
-                $.ajaxSetup({async: false});
-                var main = "";
-                $.getJSON('/hot-samer?offset=0&limit=1000', function (data) {
-                    $.each(data, function (key, val) {
-                        main += '<a target="_blank" href="/samer/' + val['author_uid'] + '"><img class="lazy" data-original="' + val['photo'] + '" src="/static/image/ajax-loader.gif" weight=512 height=256 /></a>';
-                    });
-                });
-              document.getElementById("container").innerHTML = main;
-            </script>
+        <div id="content">
+            {% if not profile_list %}
+                <p> Same 服务器忙</p>
+            {% else %}
+                {% for uid, profile in profile_list %}
+                    <div class="left">
+                    <a href="/samer/{{ uid }}" target="_blank">
+                        <img src="{{ profile['avatar'] }}" width=128 height=128 alt="Ballade"/>
+                    </a>
+                    <p>同感数: {{ profile['senses'] }}</p>
+                    <p>名字: {{ profile['username'] }}</p>
+                    <p>坐标: {{ profile['timezone'] }}</p>
+                    <p>加入时间: {{ profile['join_at'].split()[0] }}</p>
+                    </div>
+                {% end %}
+            {% end %}
+
         </div>
     </div>
+    </div>
 </div>
-
-<script type="text/javascript">
-    $(function () {
-        $(function () {
-            $("img.lazy").lazyload({
-//                    event: "sporty",
-                effect: "fadeIn",
-                effectTime: 200,
-                threshold: 200
-            });
-        });
-        $(window).bind("load", function () {
-            var timeout = setTimeout(function () {
-                $("img.lazy").trigger("sporty")
-            }, 5000);
-        });
-    });
-</script>
 </body>
 </html>

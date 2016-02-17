@@ -5,19 +5,76 @@
 <title>Hot-Samer</title>
     <style>
         body {
+            text-align: left;
+        }
+        #container
+        {
+            height: 600px;
+            overflow: scroll;
+        }
+        .title {
+            text-align: center;
+            padding-top:15px;
+            padding-left:10px;
+            padding-right:30px;
+            padding-bottom:40px;
+            border: 1px solid 000000;
+        }
+        .little_title {
             text-align: center;
         }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        li {
+            display: inline;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .left {
+            display: inline-block;
+            width: 200px;
+            height: 200px;
+            background: #FFFFFF;
+        }
+
+        .right {
+            height: 200px;
+            background: #FF6633;
+            display: inline-block;
+            vertical-align: top;
+        / / 与左侧div顶部对齐
+        }
+
     </style>
 
-<script type = "text/javascript"
-   src = "/static/js/jquery.min.js"></script>
+<script type = "text/javascript" src = "/static/js/jquery.min.js"></script>
+<script src="/static/js/jquery.lazyload.js" type="text/javascript"></script>
 </head>
 <body>
 <div>
     <div>
-        <h1>hot-samer</h1>
-        <h5><a href="/">最新</a> <a href="/senses">最热</a> <a href="/fun">好玩</a> <a href="/photography">影像</a> <a href="/others">其他</a></h5>
-        <div id="content">
+        <div class="title"> <h1>hot-samer</h1> </div>
+        <div class="title">
+            <ul>
+                <li><a href="/">最新</a></li>
+                <li><a href="/senses">最热</a></li>
+                <li><a href="/fun">好玩</a></li>
+                <li><a href="/photography">影像</a></li>
+                <li><a href="/others">其他</a></li>
+                <li><a href="/hottest-rank">周红人</a></li>
+            </ul>
+            <!--<h5><a href="/">最新</a> <a href="/senses">最热</a> <a href="/fun">好玩</a> <a href="/photography">影像</a> <a href="/others">其他</a></h5>-->
+        </div>
+        <div id="content" class="title">
             {% if not profile %}
                 <p> Same 服务器忙</p>
             {% else %}
@@ -33,19 +90,20 @@
         </div>
     </div>
     <div>
-        <h4>Ta的图文动态</h4>
-        <div>
+        <div class="little_title"><h4>Ta的图文动态</h4></div>
+        <div class="title">
             {% if not latest_news %}
             <p>Same 服务器忙</p>
             {% else %}
             {% for new in latest_news %}
+                <div class="title">
+
                 {% if 'photo' in new %}
                 <a href="{{ new['photo'] }}"><img src="{{ new['photo'] }}" weight=512 height=256/></a>
                 {% else %}
                     {% continue %}
                 {% end %}
 
-                <div>
                     {% if 'txt' in new %}
                     <p>{{ new['txt'] }}</p>
                     {% end %}
@@ -56,7 +114,6 @@
 
                     <p>频道 {{ new['channel']['name'] }}</p>
                     <p>{{ new['created_at'] }}</p>
-                    <p>-------------------------------------------------</p>
                 </div>
             </div>
             {% end %}

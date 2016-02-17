@@ -82,10 +82,7 @@ class HotSamerHandler(BaseHandler):
         else:
             sort_condition = 'order by timestamp desc limit %d offset %s' % (limit, offset)
         sql += sort_condition
-        arg = urllib2.quote(sql)
-        fetch_url = 'http://localhost:9200/_sql?sql=%s' % arg
-
-        resp = yield self.fetch_url(fetch_url)
+        resp = yield self.query_from_es(sql)
         if not resp:
             self.write(json.dumps([]))
             self.finish()
@@ -109,18 +106,9 @@ from same_spider.secret import header
 class SamerProfileHandler(BaseHandler):
     @gen.coroutine
     def get(self, uid):
-        fetch_url = 'https://v2.same.com/user/%s/profile' % uid
-        resp = yield self.fetch_url(fetch_url, skip_except_handle=True, headers=header)
-        data = {'code': 500}
-        profile = {}
-        if resp:
-            if resp.code == 200:
-                data = json.loads(resp.body)
-        if data['code'] == 0:
-            profile = data['data']['user']
-        if 'join_at' in profile:
-            profile['join_at'] = datetime.datetime.fromtimestamp(int(profile['join_at'])).strftime('%Y-%m-%d %H:%M:%S')
-
+        profile = yield self.get_profile_from_es(uid)
+        if not profile:
+            profile = yield self.get_profile_from_same(uid)
         fetch_url = 'https://v2.same.com/user/%s/senses' % uid
         resp2 = yield self.fetch_url(fetch_url, skip_except_handle=True, headers=header)
         news_data = {'code': 500}
@@ -173,6 +161,28 @@ class DeliveryMessageHandler(BaseHandler):
         raise gen.Return()
 
 
+class HotestSamerRankHandler(BaseHandler):
+    @gen.coroutine
+    def get(self):
+        early_time = datetime.datetime.now() - datetime.timedelta(days=7)
+        query_ugc_sql = 'SELECT * FROM same/user_ugc WHERE timestamp>"%s"' %\
+                        (early_time.isoformat())
+        print query_ugc_sql
+        resp = yield self.query_from_es(query_ugc_sql)
+        rank_data = {}
+        if resp:
+            for ugc in json.loads(resp.body)['hits']['hits']:
+                ugc = ugc['_source']
+                rank_data.setdefault(str(ugc['author_uid']), 0)
+                rank_data[str(ugc['author_uid'])] += int(ugc['likes'])
+        profile_list = yield self.get_multi_profile_from_es(rank_data.keys())
+        for uid, profile in profile_list.items():
+            profile['likes_count'] = rank_data[str(uid)]
+        profile_list = sorted(profile_list.items(), key=lambda x:x[1]['likes_count'], reverse=True)
+        self.render('hottest_rank.html', profile_list=profile_list)
+        raise gen.Return()
+
+
 handlers = [
     (r"/", MainHandler),
     (r"/senses", SortSensesHandler),
@@ -181,6 +191,7 @@ handlers = [
     (r"/fun", FunIndex),
     (r"/photography", PhotographyIndex),
     (r"/others", OthersIndex),
+    (r"/hottest-rank", HotestSamerRankHandler),
     # (r"/delivery", MsgIndex),
     # (r"/delivery/(\d+)", DeliveryMessageHandler),
     (r'/favicon.ico', tornado.web.StaticFileHandler, dict(url='/static/favicon.ico', permanent=False)),

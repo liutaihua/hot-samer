@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Hot-Samer</title>
-    <style type="text/css">
+    <style>
         body {
             text-align: center;
         }
@@ -12,6 +12,47 @@
             height: 600px;
             overflow: scroll;
         }
+        .title {
+            text-align: center;
+            padding-top:15px;
+            padding-left:10px;
+            padding-right:30px;
+            padding-bottom:40px;
+            border: 1px solid 000000;
+        }
+        .little_title {
+            text-align: center;
+        }
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        li {
+            display: inline;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .left {
+            display: inline-block;
+            width: 200px;
+            height: 200px;
+            background: #FFFFFF;
+        }
+
+        .right {
+            height: 200px;
+            background: #FF6633;
+            display: inline-block;
+            vertical-align: top;
+        / / 与左侧div顶部对齐
+        }
+
     </style>
 
 <script type = "text/javascript" src = "/static/js/jquery.min.js"></script>
@@ -20,8 +61,18 @@
 <body>
 <div>
     <div>
-        <h1>hot-samer</h1>
-        <h5><a href="/">最新</a> <a href="/senses">最热</a> <a href="/fun">好玩</a> <a href="/photography">影像</a> <a href="/others">其他</a></h5>
+        <div class="title"> <h1>hot-samer</h1> </div>
+        <div class="title">
+            <ul>
+                <li><a href="/">最新</a></li>
+                <li><a href="/senses">最热</a></li>
+                <li><a href="/fun">好玩</a></li>
+                <li><a href="/photography">影像</a></li>
+                <li><a href="/others">其他</a></li>
+                <li><a href="/hottest-rank">周红人</a></li>
+            </ul>
+            <!--<h5><a href="/">最新</a> <a href="/senses">最热</a> <a href="/fun">好玩</a> <a href="/photography">影像</a> <a href="/others">其他</a></h5>-->
+        </div>
         <div id="container">
             <script type="text/javascript">
                 $.ajaxSetup({async: false});
