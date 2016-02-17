@@ -1,10 +1,21 @@
 ﻿{% extends "base.html" %}
+{% block head %}
+<title>Hot-Samer(给心仪Samer发匿名私信)</title>
+{% end %}
 
 {% block body %}
 <div>
+    <li class="p-li">
+        <a href="/samer/{{ profile['id'] }}" target="_blank" title="">
+            <div class="pic left">
+                <img class="img-circle" src="{{ profile['avatar'] }}" width=128 height=128 alt="Ballade"/>
+            </div>
+        </a>
+    </li>
+
     <form method="post">
         <div class="form-group">
-            <label for="msg">内容</label>
+            <label for="msg">给Ta匿名信件(请勿滥用此功能)</label>
             <textarea name="msg" class="form-control" rows="3" id="msg"></textarea>
         </div>
         <button type="submit" class="btn btn-default">Submit</button>

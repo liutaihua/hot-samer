@@ -131,9 +131,13 @@ def random_with_N_digits(n):
 
 
 class LetterHandler(BaseHandler):
+    @gen.coroutine
     def get(self, uid):
-        self.set_header('Access-Control-Allow-Origin', '*')
-        return self.render('letter.html', tuid=uid)
+        profile = yield self.get_profile_from_es(uid)
+        if not profile:
+            profile = yield self.get_profile_from_same(uid)
+        self.render('letter.html', tuid=uid, profile=profile)
+        raise gen.Return()
 
     @gen.coroutine
     def post(self, to_uid):
