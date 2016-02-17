@@ -164,7 +164,7 @@ class DeliveryMessageHandler(BaseHandler):
 class HotestSamerRankHandler(BaseHandler):
     @gen.coroutine
     def get(self):
-        early_time = datetime.datetime.now() - datetime.timedelta(days=7)
+        early_time = datetime.datetime.now() - datetime.timedelta(days=30)
         query_ugc_sql = 'SELECT * FROM same/user_ugc WHERE timestamp>"%s"' %\
                         (early_time.isoformat())
         print query_ugc_sql
