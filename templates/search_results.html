@@ -4,9 +4,9 @@
     <div>
         <div>
             {% if not profile_list %}
-                <p> Same 服务器忙</p>
+                <p> 没有找到相关Samer, 尝试改变查询关键字吧(或hot-samer还没收录到对方)</p>
             {% else %}
-                <h5>下面是不是你要找的Samer?</h5>
+                <h5>Ta们是不是你要找的Samer?</h5>
                 {% for idx, (uid, profile) in enumerate(profile_list) %}
             <li class="p-li">
                 <div style="background: #93d6ef;" class="top-n">{{ idx + 1 }}</div>
