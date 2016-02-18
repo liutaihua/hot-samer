@@ -201,8 +201,8 @@ def collect_single_channel_data(cid, max_expire=3600):
 def get_latest_channels(filter_cate_ids=None, max_expire=3600):
     channel_info_list = []
     result_list, next_uri = get_latest_channels_url()
-    if filter_cate_ids:
-        result_list = [i for i in result_list if int(i['cate']) in filter_cate_ids]
+    # if filter_cate_ids:
+    #     result_list = [x for x in result_list if x['cate'] in filter_cate_ids or []]
     channel_info_list.extend(result_list)
     while len(result_list) > 0 and next_uri:
         print 'next uri:', next_uri
@@ -210,8 +210,8 @@ def get_latest_channels(filter_cate_ids=None, max_expire=3600):
         if result_list:
             if time.time() - int(next_uri.split('=')[1][:10]) > max_expire:
                 break
-            if filter_cate_ids:
-                result_list = [i for i in result_list if int(i['cate']) in filter_cate_ids]
+            # if filter_cate_ids:
+            #     result_list = [i for i in result_list if int(i['cate']) in filter_cate_ids]
         channel_info_list.extend(result_list)
     for channel_info in channel_info_list:
         collect_single_channel_data(channel_info['id'], max_expire=3600*2)
