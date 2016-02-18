@@ -172,6 +172,7 @@ def insert_ugc_into_es(result_list):
                 'timestamp': datetime.datetime.fromtimestamp(int(float(ugc['created_at']))),
                 'created_at': ugc['created_at'],
                 'channel_id': ugc['channel']['id'],
+                'channel_cate': ugc['channel']['cate'],
                 'author_name': ugc['user']['username'],
             }
         }
@@ -197,6 +198,41 @@ def collect_single_channel_data(cid, max_expire=3600):
     if recent_ugc_list:
         insert_ugc_into_es(recent_ugc_list)
 
+def get_latest_channels(filter_cate_ids=None, max_expire=3600):
+    channel_info_list = []
+    result_list, next_uri = get_latest_channels_url()
+    if filter_cate_ids:
+        result_list = [i for i in result_list if int(i['cate']) in filter_cate_ids]
+    channel_info_list.extend(result_list)
+    while len(result_list) > 0 and next_uri:
+        print 'next uri:', next_uri
+        result_list, next_uri = get_latest_channels_url(next_uri)
+        if result_list:
+            if time.time() - int(next_uri.split('=')[1][:10]) > max_expire:
+                break
+            if filter_cate_ids:
+                result_list = [i for i in result_list if int(i['cate']) in filter_cate_ids]
+        channel_info_list.extend(result_list)
+    for channel_info in channel_info_list:
+        collect_single_channel_data(channel_info['id'], max_expire=3600*2)
+
+def get_latest_channels_url(next_uri=None):
+    if not next_uri:
+        url = 'https://v2.same.com/latest/channels'
+    else:
+        url = 'https://v2.same.com' + next_uri
+    try:
+        res = requests.get(url, verify=False, headers=header)
+        data = json.loads(res.text)
+        result = data['data']['results']
+        if not result:
+            return [], None
+        return result, data['data']['next']
+    except Exception, e:
+        print 'get_latest_channels_url err', e, url
+        return [], None
+
+
 if __name__ == "__main__":
     if sys.argv[1] == 'get_photo':
         channels_ids = get_channels_ids_with_cate_id(2, offset=None)
@@ -213,6 +249,8 @@ if __name__ == "__main__":
     elif sys.argv[1] == 'get_zipai':
         # 你拍我画频道
         collect_single_channel_data(1312542)
+    elif sys.argv[1] == 'get_latest_channels':
+        get_latest_channels(600)
     elif sys.argv[1] == 'get_x':
         # collect_single_channel_data(1032823, 86400*1) # tui
         #

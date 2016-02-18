@@ -144,12 +144,36 @@
 
 <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
 <!--<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>-->
+
+<script src="/static/js/layer/layer.js"></script>
+<script type="text/javascript">
+    function callSearch() {
+        layer.open({
+            type: 1, //page层
+            area: ['500px', '140px'],
+            title: '搜索Samer',
+            shade: 0.3, //遮罩透明度
+            moveType: 0, //拖拽风格，0是默认，1是传统拖动
+            shift: 0, //0-6的动画形式，-1不开启
+//            content: ''
+            content: '<form action="/search" method="post">'+
+                        '<div class="form-group">'+
+                            '<label for="name">输入昵称任意字,寻找Samer</label>'+
+                            '<input name="name" class="form-control" id="name"></input>'+
+                        '</div>'+
+                        '<button type="submit" class="btn btn-default">Submit</button>'+
+                    '</form>'
+
+        });
+    }
+</script>
+
 {% block head %} {% end %}
 </head>
 <body>
-<!--<div class="rightTop">-->
-    <!--<a href="/about">关于</a>-->
-<!--</div>-->
+<div class="rightTop">
+    <a href="#" onclick="callSearch()">寻人</a>
+</div>
 <div>
     <div class="title"><h1>hot-samer</h1></div>
     <div class="title">
@@ -167,6 +191,7 @@
 
     {% block body %}{% end %}
 </div>
+
 <footer>
  <p style="text-align: center;"> &copy; 2016 <a href="https://github.com/liutaihua/hot-samer">liutaihua(github) </a>all rights reserved</p>
 </footer>

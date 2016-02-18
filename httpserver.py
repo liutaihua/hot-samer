@@ -108,9 +108,7 @@ from same_spider.secret import header
 class SamerProfileHandler(BaseHandler):
     @gen.coroutine
     def get(self, uid):
-        profile = yield self.get_profile_from_es(uid)
-        if not profile:
-            profile = yield self.get_profile_from_same(uid)
+        profile = yield self.get_profile(uid)
         fetch_url = 'https://v2.same.com/user/%s/senses' % uid
         resp2 = yield self.fetch_url(fetch_url, skip_except_handle=True, headers=header)
         news_data = {'code': 500}
@@ -135,9 +133,7 @@ def random_with_N_digits(n):
 class LetterHandler(BaseHandler):
     @gen.coroutine
     def get(self, uid):
-        profile = yield self.get_profile_from_es(uid)
-        if not profile:
-            profile = yield self.get_profile_from_same(uid)
+        profile = yield self.get_profile(uid)
         self.render('letter.html', tuid=uid, profile=profile)
         raise gen.Return()
 
@@ -148,8 +144,8 @@ class LetterHandler(BaseHandler):
         msg = self.get_argument('msg')
         fetch_url = 'https://im-xs.same.com/imuser/sendPmsg'
         seq = random_with_N_digits(8)
-        fuid = '4306380'
-        msg = u'有Samer在 hot-samer.club 给您发匿名私信:' + msg
+        fuid = '6017298'
+        msg = u'有Samer在 hot-samer.club 给您发匿名私信:\n' + msg
         body = {
             "cmd": "smsg",
             "op": 1,
@@ -212,6 +208,24 @@ class HotestSamerRankHandler(BaseHandler):
         raise gen.Return()
 
 
+class SearchHandler(BaseHandler):
+    @gen.coroutine
+    def post(self):
+        keyword = self.get_argument('name')
+        print keyword
+        sql = 'SELECT author_uid FROM same/user_ugc where author_name="%s"' % keyword.encode('utf8')
+        print sql
+        resp = yield self.query_from_es(sql)
+        profile_list = []
+        if resp:
+            data = json.loads(resp.body)['hits']['hits']
+            uids = [i['_source']['author_uid'] for i in data]
+            if len(uids) > 100:
+                uids = uids[:100]
+            profile_list_dict = yield self.get_multi_profile_from_es(uids)
+            profile_list = sorted(profile_list_dict.items(), key=lambda x:x[1]['_score'], reverse=True)
+        self.render('search_results.html', profile_list=profile_list)
+
 handlers = [
     (r"/", MainHandler),
     (r"/senses", SortSensesHandler),
@@ -221,7 +235,7 @@ handlers = [
     (r"/photography", PhotographyIndex),
     (r"/others", OthersIndex),
     (r"/hottest-rank", HotestSamerRankHandler),
-    # (r"/letter", LetterIndex),
+    (r"/search", SearchHandler),
     (r"/letter/(\d+)", LetterHandler),
     (r'/favicon.ico', tornado.web.StaticFileHandler, dict(url='/static/favicon.ico', permanent=False)),
 ]
