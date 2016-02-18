@@ -14,7 +14,9 @@
                         <img class="img-circle" src="{{ profile['avatar'] }}" width=128 height=128 alt="Ballade"/>
                         <p class="p-tags" >名字: {{ profile['username'] }}</p>
                         <p class="p-tags" >内容: {{ profile['senses'] }}</p>
+                        {% if 'likes_count' in profile %}
                         <p class="p-tags">同感数: {{ profile['likes_count'] }}</p>
+                        {% end %}
                         <p class="p-tags">坐标: {{ profile['timezone'] }}</p>
                         <p class="p-tags">加入时间: {{ profile['join_at'].split()[0] }}</p>
                     </div>

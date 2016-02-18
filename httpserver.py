@@ -205,7 +205,7 @@ class HotestSamerRankHandler(BaseHandler):
         for uid, profile in profile_list.items():
             profile['likes_count'] = rank_data[str(uid)]
         profile_list = sorted(profile_list.items(), key=lambda x:x[1]['likes_count'], reverse=True)
-        self.render('hottest_rank.html', profile_list=profile_list)
+        self.render('user_list.html', profile_list=profile_list)
         raise gen.Return()
 
 
@@ -234,7 +234,7 @@ class SearchHandler(BaseHandler):
                 profile_dict_from_ugc = yield self.get_multi_profile_from_es(uids)
                 profile_list_dict.update(profile_dict_from_ugc)
         profile_list = sorted(profile_list_dict.items(), key=lambda x:x[1]['_score'], reverse=True)
-        self.render('search_results.html', profile_list=profile_list)
+        self.render('user_list.html', profile_list=profile_list)
         raise gen.Return()
 
 handlers = [
