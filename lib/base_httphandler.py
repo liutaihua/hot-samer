@@ -105,6 +105,22 @@ class BaseHandler(tornado.web.RequestHandler):
         raise gen.Return(profile)
 
     @gen.coroutine
+    def get_profile_with_name(self, name):
+        sql = 'SELECT * from same/user_profile where username="%s"' % name
+        resp = yield self.query_from_es(sql)
+        profile_list = []
+        for i in json.loads(resp.body)['hits']['hits']:
+            profile = i['_source']
+            profile['_score'] = i['_score']
+            profile_list.append(profile)
+        # profile_list = [i['_source'] for i in json.loads(resp.body)['hits']['hits']]
+        data = {}
+        for profile in profile_list:
+            profile['join_at'] = datetime.datetime.fromtimestamp(int(profile['join_at'])).strftime('%Y-%m-%d %H:%M:%S')
+            data[profile['id']] = profile
+        raise gen.Return(data)
+
+    @gen.coroutine
     def get_profile_from_es(self, uid):
         sql = 'SELECT * FROM same/user_profile WHERE id=%s' % uid
         resp = yield self.query_from_es(sql)

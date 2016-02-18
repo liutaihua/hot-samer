@@ -213,19 +213,29 @@ class SearchHandler(BaseHandler):
     @gen.coroutine
     def post(self):
         keyword = self.get_argument('name')
-        sql = 'SELECT author_uid FROM same/user_ugc where author_name="%s"' % keyword.encode('utf8')
-        print sql
-        resp = yield self.query_from_es(sql)
         profile_list = []
+        profile_list_dict = {}
+        if not keyword:
+            self.render('search_results.html', profile_list=profile_list)
+            raise gen.Return()
+        keyword = keyword.encode('utf8')
+        # 先查profile表
+        profile_list_dict = yield self.get_profile_with_name(keyword)
+        sql = 'SELECT author_uid FROM same/user_ugc where author_name="%s"' % keyword
+        print
+        # ugc表也查一次
+        resp = yield self.query_from_es(sql)
         if resp:
             data = json.loads(resp.body)['hits']['hits']
             if data:
                 uids = [i['_source']['author_uid'] for i in data]
                 if len(uids) > 100:
                     uids = uids[:100]
-                profile_list_dict = yield self.get_multi_profile_from_es(uids)
-                profile_list = sorted(profile_list_dict.items(), key=lambda x:x[1]['_score'], reverse=True)
+                profile_dict_from_ugc = yield self.get_multi_profile_from_es(uids)
+                profile_list_dict.update(profile_dict_from_ugc)
+        profile_list = sorted(profile_list_dict.items(), key=lambda x:x[1]['_score'], reverse=True)
         self.render('search_results.html', profile_list=profile_list)
+        raise gen.Return()
 
 handlers = [
     (r"/", MainHandler),
