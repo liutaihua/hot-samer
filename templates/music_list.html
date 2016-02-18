@@ -66,9 +66,6 @@
             margin-bottom: 1px;
 }
 
-    audio {
-   display:none;
-}
 </style>
 {% end %}
 
@@ -76,8 +73,27 @@
 <div>
 <script>
 function change(mp3, id) {
-    document.getElementById(id).innerHTML = '<audio controls autoplay><source src="' + mp3 + '" type="audio/mpeg"> </audio>';
-//    document.getElementById(id).remove();
+    player = document.getElementById('audio_'+id);
+    if (!player) {
+        document.getElementById(id).innerHTML = '<audio controls autoplay id="audio_' + id + '"><source src="' + mp3 + '" type="audio/mpeg"> </audio>';
+    } else {
+        if (player.paused == false) {
+            player.pause();
+//            player = null;
+//            parent = document.getElementById(id);
+//            parent.removeChild(player);
+        } else {
+            player.play();
+        }
+    }
+document.addEventListener('play', function(e){
+    var audios = document.getElementsByTagName('audio');
+    for(var i = 0, len = audios.length; i < len;i++){
+        if(audios[i] != e.target){
+            audios[i].pause();
+        }
+    }
+}, true);
 }
 </script>
     <ul class="list">
