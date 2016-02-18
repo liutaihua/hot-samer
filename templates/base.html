@@ -78,7 +78,7 @@
         .pic {
             margin: 0.6em auto;
             text-align: left;
-            img border: 1px solid #eee;
+            imgborder: 1px solid #eee;
             padding: 3px;
         border-radius(2 px)
         }
@@ -117,12 +117,40 @@
             vertical-align: top;
             display: inline-block;
             margin: 10px 8px 30px;
+        }
 
         .rightTop {
             position: absolute;
             right: 0;
             /*left: 0;*/
             top: 0;
+        }
+        .global-nav {
+            display: block;
+            margin: 0;
+            padding: 0;
+            height: 28px;
+            color: #d5d5d5;
+            background-color: #545652;
+            min-width: 950px;
+        }
+
+        .global-nav-items li{
+            display: inline-block;
+            zoom: 1;
+            line-height: 28px;
+            font-size: 12px;
+            vertical-align: baseline;
+            list-style: none;
+        }
+        .global-nav-items a {
+            display: inline-block;
+            zoom: 1;
+            padding: 0 12px;
+            height: 28px;
+            color: #d5d5d5;
+            text-decoration: none;
+            cursor: pointer;
         }
     </style>
 
@@ -156,12 +184,12 @@
             moveType: 0, //拖拽风格，0是默认，1是传统拖动
             shift: 0, //0-6的动画形式，-1不开启
 //            content: ''
-            content: '<form action="/search" method="post">'+
-                        '<div class="form-group">'+
-                            '<label for="name">输入昵称任意字,寻找Samer</label>'+
-                            '<input name="name" class="form-control" id="name"></input>'+
-                        '</div>'+
-                        '<button type="submit" class="btn btn-default">Submit</button>'+
+            content: '<form action="/search" method="post">' +
+                    '<div class="form-group">' +
+                    '<label for="name">输入昵称任意字,寻找Samer</label>' +
+                    '<input name="name" class="form-control" id="name"></input>' +
+                    '</div>' +
+                    '<button type="submit" class="btn btn-default">Submit</button>' +
                     '</form>'
 
         });
@@ -171,25 +199,54 @@
 {% block head %} {% end %}
 </head>
 <body>
-<div class="rightTop">
-    <a href="#" onclick="callSearch()">寻人</a>
-</div>
+<div id="hs-global-nav" class="global-nav">
+
+
+    <div class="global-nav-items">
+      <ul>
+
+          <li class="on">
+              <a href="/"
+                 data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">最新</a>
+          </li>
+          <li class="on">
+              <a href="/senses"
+                 data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">最热</a>
+          </li>
+          <li class="on">
+              <a href="/fun"
+                 data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">好玩</a>
+          </li>
+          <li class="on">
+              <a href="/photography"
+                 data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">影像</a>
+          </li>
+          <li class="on">
+              <a href="/others"
+                 data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">其他</a>
+          </li>
+          <li class="on">
+              <a href="/hottest-rank"
+                 data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">周红人</a>
+          </li>
+          <li class="on">
+              <a href="/music"
+                 data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">音乐</a>
+          </li>
+          <li class="on">
+              <a href="#" onclick="callSearch()"
+                 data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">寻人</a>
+          </li>
+
+      </ul>
+    </div>
+  </div>
+
+
+
+<div>
 <div>
     <div class="title"><h1>hot-samer</h1></div>
-    <div class="title">
-        <ul>
-            <li><a href="/">最新</a></li>
-            <li><a href="/senses">最热</a></li>
-            <li><a href="/fun">好玩</a></li>
-            <li><a href="/photography">影像</a></li>
-            <li><a href="/others">其他</a></li>
-            <li><a href="/hottest-rank">周红人</a></li>
-            <li><a href="/music">音乐</a></li>
-
-        </ul>
-        <!--<h5><a href="/">最新</a> <a href="/senses">最热</a> <a href="/fun">好玩</a> <a href="/photography">影像</a> <a href="/others">其他</a></h5>-->
-    </div>
-
 
     {% block body %}{% end %}
 </div>
