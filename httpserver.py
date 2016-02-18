@@ -186,7 +186,7 @@ class HotestSamerRankHandler(BaseHandler):
     def get(self):
         early_time = datetime.datetime.now() - datetime.timedelta(days=7)
         query_ugc_sql = 'SELECT * FROM same/user_ugc WHERE timestamp>"%s" AND ' \
-                        'likes>5 ORDER BY timestamp DESC LIMIT 1000 OFFSET 0' %\
+                        'likes>5 ORDER BY timestamp DESC,likes DESC,views DESC LIMIT 1000 OFFSET 0' %\
                         (early_time.isoformat())
         print query_ugc_sql
         resp = yield self.query_from_es(query_ugc_sql)
@@ -263,7 +263,7 @@ handlers = [
     (r"/hottest-rank", HotestSamerRankHandler),
     (r"/search", SearchHandler),
     (r"/music", PopularMusicHandler),
-    # (r"/letter/(\d+)", LetterHandler),
+    (r"/letter/(\d+)", LetterHandler),
     (r'/favicon.ico', tornado.web.StaticFileHandler, dict(url='/static/favicon.ico', permanent=False)),
 ]
 

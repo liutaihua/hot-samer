@@ -7,7 +7,7 @@
                 <p> Same 服务器忙 或 用户已被注销(假如多次刷新无结果)</p>
             {% else %}
             <li class="p-li">
-                    <!--<a href="/letter/{{ profile['id'] }}"><div style="background: #93d6ef;" class="top-n">私信</div></a>-->
+                    <a href="/letter/{{ profile['id'] }}"><div style="background: #93d6ef;" class="top-n">私信</div></a>
                     <a href="{{ profile['avatar'] }}" target="_blank" title="">
                     <div class="pic left">
                         <img class="img-circle" src="{{ profile['avatar'] }}" width=128 height=128 alt="Ballade"/>
