@@ -9,6 +9,7 @@ import requests
 import urllib2
 import random
 import datetime
+import platform
 
 import tornado
 import tornado.web
@@ -212,7 +213,6 @@ class SearchHandler(BaseHandler):
     @gen.coroutine
     def post(self):
         keyword = self.get_argument('name')
-        print keyword
         sql = 'SELECT author_uid FROM same/user_ugc where author_name="%s"' % keyword.encode('utf8')
         print sql
         resp = yield self.query_from_es(sql)
@@ -265,7 +265,8 @@ def main(port):
     print "start on port %s..." % port
     http_server = tornado.httpserver.HTTPServer(Application(), xheaders=True)
     http_server.listen(port)
-    tornado.autoreload.start()
+    if platform.system() == 'Darwin':
+        tornado.autoreload.start()
     tornado.ioloop.IOLoop.instance().start()
 
 
