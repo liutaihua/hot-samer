@@ -219,7 +219,7 @@ class SearchHandler(BaseHandler):
         profile_list = []
         if resp:
             data = json.loads(resp.body)['hits']['hits']
-            if data:                
+            if data:
                 uids = [i['_source']['author_uid'] for i in data]
                 if len(uids) > 100:
                     uids = uids[:100]
@@ -237,7 +237,7 @@ handlers = [
     (r"/others", OthersIndex),
     (r"/hottest-rank", HotestSamerRankHandler),
     (r"/search", SearchHandler),
-    (r"/letter/(\d+)", LetterHandler),
+    # (r"/letter/(\d+)", LetterHandler),
     (r'/favicon.ico', tornado.web.StaticFileHandler, dict(url='/static/favicon.ico', permanent=False)),
 ]
 
