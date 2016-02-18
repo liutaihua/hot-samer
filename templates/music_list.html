@@ -66,19 +66,29 @@
             margin-bottom: 1px;
 }
 
+    audio {
+   display:none;
+}
 </style>
 {% end %}
 
 {% block body %}
 <div>
+<script>
+function change(mp3, id) {
+    document.getElementById(id).innerHTML = '<audio controls autoplay><source src="' + mp3 + '" type="audio/mpeg"> </audio>';
+//    document.getElementById(id).remove();
+}
+</script>
     <ul class="list">
     {% for idx, music in enumerate(music_list) %}
 <li>
+    <div id="div2"></div>
     <div class="music-pic p-li">
+        {% set mp3_url = music['music_src'] %}
         <!--<div style="background: #93d6ef;" class="top-n">{{ idx + 1 }}</div>-->
-        <a href="{{ music['music_src'] }}" class="artist-song-play" data-sid="[&quot;254321&quot;, &quot;254320&quot;]"
-           data-source="navi_interest">
-            <!--<img src="{{ music['music_cover']  }}">-->
+        <a href="#" class="artist-song-play" data-sid="[&quot;254321&quot;, &quot;254320&quot;]"
+           data-source="navi_interest" onclick="change('{{ mp3_url }}', '{{ idx }}')" id="{{ idx }}">
             <img class="img-circle" src="{{ music['music_cover']  }}" width=128 height=128 alt="Ballade"/>
 
             <!--<p style="opacity: 0;">试听热门歌曲</p>-->
