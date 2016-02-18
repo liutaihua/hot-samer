@@ -232,6 +232,64 @@ def get_latest_channels_url(next_uri=None):
         print 'get_latest_channels_url err', e, url
         return [], None
 
+def get_music_channels():
+    url = 'http://v2.same.com/channels/cate/3'
+    try:
+        res = requests.get(url, headers=header)
+        if res.status_code == 200:
+            return json.loads(res.text)['data']['results']
+    except Exception, e:
+        print 'get_music_channels err:', url, e
+        return []
+
+def get_popular_music_list_with_cid(cid, days=7, page=3):
+    results_list = []
+    for p in range(page):
+        if p == 0:
+            url = 'https://v2.same.com/activity/senses/channel/%s?order=hostest&from=-%sday' % (cid, days)
+        else:
+            url = 'https://v2.same.com/activity/senses/channel/%s?order=hostest&from=-%sday&offset=%s' % (cid, days, p)
+        try:
+            res = requests.get(url, verify=False, headers=header)
+            if res.status_code == 200:
+                data = json.loads(res.text)
+                results_list.extend(data['data']['results'])
+        except Exception, e:
+            print 'parse err', e, url
+    return results_list
+
+def collect_popular_music_into_es():
+    channels_ids = [i['id'] for i in get_music_channels()]
+    for cid in channels_ids:
+        music_list = get_popular_music_list_with_cid(cid, page=3)
+        bulk_list = []
+        for music in music_list:
+            bulk_list.append({
+            "_index": "same",
+            "_type": "music",
+            "_id": int(music['id']),
+            '_source': {
+                'id': int(music['id']),
+                'views': int(music['views']),
+                'likes': music['likes'],
+                'created_at': music['created_at'],
+                'timestamp': datetime.datetime.fromtimestamp(int(music['created_at'])),
+                'author_uid': music['user']['id'],
+                'author_name': music['user']['username'],
+                'channel_id': music['channel']['id'],
+                'channel_cate': music['channel']['cate'],
+                'txt': music['txt'],
+                'music_id': music['media']['music']['id'],
+                'music_title': music['media']['music']['title'],
+                'music_src': music['media']['music']['src'],
+                'music_author': music['media']['music']['author'],
+                'music_sid': music['media']['music']['sid'],
+                'music_cover': music['media']['music']['cover'],
+            }
+            })
+        print 'collect music:', helpers.bulk(es, bulk_list)
+
+
 
 if __name__ == "__main__":
     if sys.argv[1] == 'get_photo':
@@ -279,4 +337,7 @@ if __name__ == "__main__":
             init_uid += offset
         print 'start gevent done, count:%d'%len(gs)
         gevent.joinall(gs)
+
+    elif sys.argv[1] == 'get_music':
+        collect_popular_music_into_es()
 

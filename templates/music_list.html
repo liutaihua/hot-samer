@@ -1,0 +1,101 @@
+﻿{% extends "base.html" %}
+
+{% block head %}
+<link rel="stylesheet", href="http://img3.douban.com/misc/mixed_static/6bcb76057110278a.css">
+<link rel="stylesheet", href="http://img3.douban.com/f/music/333ae6a8709dabda7349ac719b00c7ac782d0f7b/css/music/artists.css">
+
+
+<style>
+.music-pic {position:relative;width:150px;height:150px;margin-bottom:5px;overflow:hidden;background:#333;font-size:0;}
+.music-pic img { min-width:150px;min-height:150px;_height:150px;_width:150px;display:block;margin:0 auto; }
+.music-pic a { display:block; }
+.music-pic a:hover { background-color: transparent; }
+
+.music-li { width:150px;margin: 35px 0 0 50px; }
+.music-ul { margin: -35px 0 0 -50px; }
+.music-pic {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin-bottom: 5px;
+    overflow: hidden;
+    background: #333;
+    font-size: 0;
+    text-align: left;
+}
+
+.list li {
+    font-size: 12px;
+    display: inline-block;
+    zoom: 1;
+    vertical-align: top;
+    word-wrap: break-word;
+}
+
+.artist-song-play .icon-bg {
+    width: 26px;
+    height: 26px;
+    margin: -14px 0 0 -14px;
+    background: #222;
+    opacity: .85;
+    filter: alpha(opacity=85);
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    border-radius: 100%;
+}
+.artist-song-play .icon-play {
+    width: 9px;
+    height: 11px;
+    margin: -6px 0 0 -4px;
+    background: url(http://img3.douban.com/f/music/2e2ba4027350d34a57a969920083aaff0193de7f/pics/icon/ic_bg_play.png) no-repeat 0 0;
+    _background: none;
+    _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/static/icon/ic_bg_play.png');
+}
+.artist-song-play {
+    position: absolute;
+    width: 180px;
+    height: 150px;
+    left: -15px;
+}
+.artist-name {
+    display: block;
+    height: 5.4em;
+    overflow: hidden;
+    font-size: 14px;
+            margin-top: 20px;
+            margin-bottom: 1px;
+}
+
+</style>
+{% end %}
+
+{% block body %}
+<div>
+    <ul class="list">
+    {% for idx, music in enumerate(music_list) %}
+<li>
+    <div class="music-pic p-li">
+        <!--<div style="background: #93d6ef;" class="top-n">{{ idx + 1 }}</div>-->
+        <a href="{{ music['music_src'] }}" class="artist-song-play" data-sid="[&quot;254321&quot;, &quot;254320&quot;]"
+           data-source="navi_interest">
+            <!--<img src="{{ music['music_cover']  }}">-->
+            <img class="img-circle" src="{{ music['music_cover']  }}" width=128 height=128 alt="Ballade"/>
+
+            <!--<p style="opacity: 0;">试听热门歌曲</p>-->
+            <i class="icon icon-bg" style="background: rgb(34, 34, 34);"></i>
+            <i class="icon icon-stat icon-play"
+               style="background-image: url(&quot;/static/icon/ic_bg_play_black.png&quot;);"></i>
+        </a>
+    </div>
+    <span class="artist-name">
+            <p class="p-tags-center">播放数: {{ music['views'] }}</p>
+            <p class="p-tags-center">音乐人: {{ music['music_author'] }}</p>
+            <p class="p-tags-center">{{ music['music_title'] }}</p>
+
+            <!--<p class="p-tags-center">作者: {{ music['author_name'] }}</p>-->
+    </span>
+    </li>
+    {% end %}
+    </ul>
+</div>
+{% end %}

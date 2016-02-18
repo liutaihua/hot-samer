@@ -237,6 +237,21 @@ class SearchHandler(BaseHandler):
         self.render('user_list.html', profile_list=profile_list)
         raise gen.Return()
 
+class PopularMusicHandler(BaseHandler):
+    @gen.coroutine
+    def get(self):
+        filter_date = datetime.datetime.now() - datetime.timedelta(days=30)
+        sql = 'SELECT * FROM same/music where timestamp>"%s" AND likes>3 order by likes desc,views desc,timestamp desc LIMIT 200' %(filter_date.isoformat())
+        print sql
+        resp = yield self.query_from_es(sql)
+        music_list = []
+        if resp:
+            data = json.loads(resp.body)
+            for music in data['hits']['hits']:
+                music_list.append(music['_source'])
+        self.render('music_list.html', music_list=music_list)
+        raise gen.Return()
+
 handlers = [
     (r"/", MainHandler),
     (r"/senses", SortSensesHandler),
@@ -247,6 +262,7 @@ handlers = [
     (r"/others", OthersIndex),
     (r"/hottest-rank", HotestSamerRankHandler),
     (r"/search", SearchHandler),
+    (r"/music", PopularMusicHandler),
     # (r"/letter/(\d+)", LetterHandler),
     (r'/favicon.ico', tornado.web.StaticFileHandler, dict(url='/static/favicon.ico', permanent=False)),
 ]
