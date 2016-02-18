@@ -99,12 +99,11 @@ document.addEventListener('play', function(e){
     <ul class="list">
     {% for idx, music in enumerate(music_list) %}
 <li>
-    <div id="div2"></div>
-    <div class="music-pic p-li">
-        {% set mp3_url = music['music_src'] %}
+    {% set mp3_url = music['music_src'] %}
+    <div class="music-pic p-li" onclick="change('{{ mp3_url }}', '{{ idx }}')" id="{{ idx }}">
         <!--<div style="background: #93d6ef;" class="top-n">{{ idx + 1 }}</div>-->
         <a href="#" class="artist-song-play" data-sid="[&quot;254321&quot;, &quot;254320&quot;]"
-           data-source="navi_interest" onclick="change('{{ mp3_url }}', '{{ idx }}')" id="{{ idx }}">
+           data-source="navi_interest">
             <img class="img-circle" src="{{ music['music_cover']  }}" width=128 height=128 alt="Ballade"/>
 
             <!--<p style="opacity: 0;">试听热门歌曲</p>-->
