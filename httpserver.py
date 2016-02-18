@@ -219,11 +219,12 @@ class SearchHandler(BaseHandler):
         profile_list = []
         if resp:
             data = json.loads(resp.body)['hits']['hits']
-            uids = [i['_source']['author_uid'] for i in data]
-            if len(uids) > 100:
-                uids = uids[:100]
-            profile_list_dict = yield self.get_multi_profile_from_es(uids)
-            profile_list = sorted(profile_list_dict.items(), key=lambda x:x[1]['_score'], reverse=True)
+            if data:                
+                uids = [i['_source']['author_uid'] for i in data]
+                if len(uids) > 100:
+                    uids = uids[:100]
+                profile_list_dict = yield self.get_multi_profile_from_es(uids)
+                profile_list = sorted(profile_list_dict.items(), key=lambda x:x[1]['_score'], reverse=True)
         self.render('search_results.html', profile_list=profile_list)
 
 handlers = [
