@@ -7,6 +7,7 @@ import sys
 import time
 import requests
 import urllib2
+import copy
 import random
 import datetime
 import platform
@@ -22,6 +23,7 @@ from lib import session
 from tornado import gen
 from tornado.ioloop import IOLoop
 from lib.base_httphandler import BaseHandler
+from same_spider.secret import header
 
 
 class MainHandler(tornado.web.RequestHandler):
@@ -80,30 +82,23 @@ class HotSamerHandler(BaseHandler):
 
         if sort_by_likes:
             time_condition = datetime.datetime.now() - datetime.timedelta(days=3)
-            sort_condition = 'and timestamp> "%s" order by likes desc limit %d offset %s' % (
-            time_condition.isoformat(), limit, offset)
+            sort_condition = 'and timestamp> "%s" order by likes desc,views desc,timestamp desc ' \
+                             'limit %d offset %s' % (time_condition.isoformat(), limit, offset)
         else:
             sort_condition = 'order by timestamp desc limit %d offset %s' % (limit, offset)
         sql += sort_condition
-        resp = yield self.query_from_es(sql)
-        if not resp:
-            self.write(json.dumps([]))
-            self.finish()
-            raise gen.Return
-        resp = json.loads(resp.body)
+        photo_list = yield self.query_from_es(sql)
         self.set_header('Access-Control-Allow-Origin', '*')
-        photo_list = []
-        for i in resp['hits']['hits']:
-            photo_info = i['_source']
+        for photo_info in copy.deepcopy(photo_list):
             if not photo_info.get('photo'):
-                continue
-            photo_list.append(photo_info)
+                photo_list.remove(photo_info)
+        # if sort_by_likes:
+        #     # 热频道
+        #     tumblr_resp = self.query_from_es('select * from tumblr/pic order by timestamp desc limit 10')
         self.write(json.dumps(photo_list))
+        self.flush()
         self.finish()
         raise gen.Return()
-
-
-from same_spider.secret import header
 
 
 class SamerProfileHandler(BaseHandler):
@@ -189,13 +184,11 @@ class HotestSamerRankHandler(BaseHandler):
                         'likes>5 ORDER BY timestamp DESC,likes DESC,views DESC LIMIT 1000 OFFSET 0' %\
                         (early_time.isoformat())
         print query_ugc_sql
-        resp = yield self.query_from_es(query_ugc_sql)
+        ugc_list = yield self.query_from_es(query_ugc_sql)
         rank_data = {}
-        if resp:
-            for ugc in json.loads(resp.body)['hits']['hits']:
-                ugc = ugc['_source']
-                rank_data.setdefault(str(ugc['author_uid']), 0)
-                rank_data[str(ugc['author_uid'])] += int(ugc['likes'])
+        for ugc in ugc_list:
+            rank_data.setdefault(str(ugc['author_uid']), 0)
+            rank_data[str(ugc['author_uid'])] += int(ugc['likes'])
         uids = rank_data.keys()
         profile_list = {}
         if len(uids) > 200:
@@ -222,19 +215,17 @@ class SearchHandler(BaseHandler):
         # 先查profile表
         profile_list_dict = yield self.get_profile_with_name(keyword)
         sql = 'SELECT author_uid FROM same/user_ugc where author_name="%s"' % keyword
-        print
+        print sql
         # ugc表也查一次
-        resp = yield self.query_from_es(sql)
-        if resp:
-            data = json.loads(resp.body)['hits']['hits']
-            if data:
-                uids = [i['_source']['author_uid'] for i in data]
-                if len(uids) > 100:
-                    uids = uids[:100]
-                profile_dict_from_ugc = yield self.get_multi_profile_from_es(uids)
-                profile_list_dict.update(profile_dict_from_ugc)
+        data = yield self.query_from_es(sql)
+        uids = [i['author_uid'] for i in data]
+        if len(uids) > 100:
+            uids = uids[:100]
+        if uids:
+            profile_dict_from_ugc = yield self.get_multi_profile_from_es(uids)
+            profile_list_dict.update(profile_dict_from_ugc)
         profile_list = sorted(profile_list_dict.items(), key=lambda x:x[1]['_score'], reverse=True)
-        self.render('user_list.html', profile_list=profile_list)
+        self.render('user_list.html', profile_list=profile_list, from_search_page=True)
         raise gen.Return()
 
 class PopularMusicHandler(BaseHandler):
@@ -244,12 +235,7 @@ class PopularMusicHandler(BaseHandler):
         sql = 'SELECT * FROM same/music where timestamp>"%s" AND likes>3 ' \
               'order by likes desc,views desc,timestamp desc LIMIT 200' %(filter_date.isoformat())
         print sql
-        resp = yield self.query_from_es(sql)
-        music_list = []
-        if resp:
-            data = json.loads(resp.body)
-            for music in data['hits']['hits']:
-                music_list.append(music['_source'])
+        music_list = yield self.query_from_es(sql)
         self.render('music_list.html', music_list=music_list)
         raise gen.Return()
 

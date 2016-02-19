@@ -63,7 +63,13 @@ class BaseHandler(tornado.web.RequestHandler):
         sql = urllib2.quote(sql)
         fetch_url = 'http://localhost:9200/_sql?sql=%s' % sql
         response = yield self.fetch_url(fetch_url)
-        raise gen.Return(response)
+        results = []
+        if response:
+            for data in json.loads(response.body)['hits']['hits']:
+                res = data['_source']
+                res['_score'] = data['_score']
+                results.append(res)
+        raise gen.Return(results)
 
     @gen.coroutine
     def get_hottest_samer_list_from_es(self):
@@ -84,12 +90,7 @@ class BaseHandler(tornado.web.RequestHandler):
         sql = 'SELECT * FROM same/user_profile WHERE id in (%s)' % ','.join(map(str, uids))
         if skip_silence_user:
             sql += ' AND senses > 20'
-        resp = yield self.query_from_es(sql)
-        profile_list = []
-        for i in json.loads(resp.body)['hits']['hits']:
-            profile = i['_source']
-            profile['_score'] = i['_score']
-            profile_list.append(profile)
+        profile_list = yield self.query_from_es(sql)
         # profile_list = [i['_source'] for i in json.loads(resp.body)['hits']['hits']]
         data = {}
         for profile in profile_list:
@@ -107,12 +108,7 @@ class BaseHandler(tornado.web.RequestHandler):
     @gen.coroutine
     def get_profile_with_name(self, name):
         sql = 'SELECT * from same/user_profile where username="%s"' % name
-        resp = yield self.query_from_es(sql)
-        profile_list = []
-        for i in json.loads(resp.body)['hits']['hits']:
-            profile = i['_source']
-            profile['_score'] = i['_score']
-            profile_list.append(profile)
+        profile_list = yield self.query_from_es(sql)
         # profile_list = [i['_source'] for i in json.loads(resp.body)['hits']['hits']]
         data = {}
         for profile in profile_list:
@@ -123,9 +119,8 @@ class BaseHandler(tornado.web.RequestHandler):
     @gen.coroutine
     def get_profile_from_es(self, uid):
         sql = 'SELECT * FROM same/user_profile WHERE id=%s' % uid
-        resp = yield self.query_from_es(sql)
-        profile = json.loads(resp.body)['hits']['hits']
-        profile = profile[0]['_source'] if profile else {}
+        profile = yield self.query_from_es(sql)
+        profile = profile[0] if profile else {}
         if profile:
             profile['join_at'] = datetime.datetime.fromtimestamp(int(profile['join_at'])).strftime('%Y-%m-%d %H:%M:%S')
         raise gen.Return(profile)

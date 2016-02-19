@@ -3,7 +3,9 @@
 {% block body %}
     <div>
         <div>
-            {% if not profile_list %}
+            {% if not profile_list and from_search_page %}
+                <h5> 没有找到, 尝试其他字符. 或hot-samer还未收录此相关samer, hot-samer会一直尝试更新</h5>
+            {% elif not profile_list %}
                 <p> Same 服务器忙</p>
             {% else %}
                 {% for idx, (uid, profile) in enumerate(profile_list) %}
