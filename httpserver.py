@@ -240,8 +240,9 @@ class SearchHandler(BaseHandler):
 class PopularMusicHandler(BaseHandler):
     @gen.coroutine
     def get(self):
-        filter_date = datetime.datetime.now() - datetime.timedelta(days=30)
-        sql = 'SELECT * FROM same/music where timestamp>"%s" AND likes>3 order by likes desc,views desc,timestamp desc LIMIT 200' %(filter_date.isoformat())
+        filter_date = datetime.datetime.now() - datetime.timedelta(days=7)
+        sql = 'SELECT * FROM same/music where timestamp>"%s" AND likes>3 ' \
+              'order by likes desc,views desc,timestamp desc LIMIT 200' %(filter_date.isoformat())
         print sql
         resp = yield self.query_from_es(sql)
         music_list = []
