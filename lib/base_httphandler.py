@@ -185,7 +185,7 @@ class BaseHandler(tornado.web.RequestHandler):
         if exception.code == 599:
             # 这里不能使用599，599不在标准里面
             app_log.error(err_msg)
-            yield self.response_msg(400, 1001, u"[外部服务器连接失败]-%s" % err_msg)
+            yield self.response_msg(500, 1001, u"[外部服务器连接失败]-%s" % err_msg)
             raise gen.Return()
         elif exception.code == 600:
             app_log.error(u"[可能是socket错误]-%s" % err_msg)
@@ -201,7 +201,7 @@ class BaseHandler(tornado.web.RequestHandler):
             raise gen.Return()
         elif exception.code >= 500:
             app_log.error(err_msg)
-            yield self.response_msg(400, 1001, err_msg)
+            yield self.response_msg(500, 1001, err_msg)
             raise gen.Return()
 
         response = exception.response
@@ -209,7 +209,7 @@ class BaseHandler(tornado.web.RequestHandler):
             response = set_response_info(response)
         except AttributeError:
             # 如果服务器返回500可以运行到这里，此时response为None
-            yield self.response_msg(400, 1004, u"外部服务器错误: %s" % fetch_url)
+            yield self.response_msg(500, 1004, u"外部服务器错误: %s" % fetch_url)
             raise gen.Return()
 
         # 因为是调用外部服务器，如果外部服务器返回错误，改写返回的code为1003
