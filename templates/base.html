@@ -3,158 +3,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Hot-Samer</title>
-    <style>
-        body {
-            text-align: left;
-        }
-        #container
-        {
-            height: 600px;
-            overflow: scroll;
-        }
-        .title {
-            text-align: center;
-            padding-top:15px;
-            padding-left:10px;
-            padding-right:30px;
-            padding-bottom:40px;
-            border: 1px solid 000000;
-        }
-        .little_title {
-            text-align: center;
-        }
-        ul {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        li {
-            display: inline;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-        }
-
-        .left {
-            display: inline-block;
-            width: 200px;
-            height: 200px;
-            background: #FFFFFF;
-        }
-
-        .right {
-            height: 200px;
-            background: #FF6633;
-            display: inline-block;
-            vertical-align: top;
-        / / 与左侧div顶部对齐
-        }
-
-        .top-n {
-            position: absolute;
-            display: inline-block;
-            padding: 0 0.4em;
-            line-height: 1.4em;
-            font-family: 'Times New Rome', serif;
-            background: #dfdfdf;
-            font-size: 11px;
-            border-radius: 2px;
-            color: #fff;
-            left: -5px;
-            top: -6px;
-            text-align: center;
-        }
-
-        .name {
-            color: #45b;
-            font-size: 14px;
-            margin: 0.8em 0 0;
-        . rbox-supple border-top: 1 px solid #f98;
-        }
-
-        .pic {
-            margin: 0.6em auto;
-            text-align: left;
-            imgborder: 1px solid #eee;
-            padding: 3px;
-        border-radius(2 px)
-        }
-
-        .p-tags {
-            letter-spacing:-3px
-            line-height:1px;
-            padding: 0;
-            margin: 0;
-            margin-top: -5px;
-            margin-bottom: -10px;
-
-            font-size: 13px;
-            font-weight: 10;
-            color: #b3b3b3;
-            height: 2.4em;
-            text-align: left;
-        }
-        .p-tags-center {
-            letter-spacing:-3px
-            line-height:1px;
-            padding: 0;
-            margin: 0;
-            margin-top: 5px;
-            margin-bottom: -10px;
-
-            font-size: 13px;
-            font-weight: 10;
-            color: #b3b3b3;
-            height: 2.4em;
-            text-align: center;
-        }
-
-        .p-li {
-            position: relative;
-            vertical-align: top;
-            display: inline-block;
-            margin: 10px 8px 30px;
-        }
-
-        .rightTop {
-            position: absolute;
-            right: 0;
-            /*left: 0;*/
-            top: 0;
-        }
-        .global-nav {
-            display: block;
-            margin: 0;
-            padding: 0;
-            height: 28px;
-            color: #d5d5d5;
-            background-color: #545652;
-            /*min-width: 950px;*/
-            min-width: 100%;
-            /*position: fixed;*/
-        }
-
-        .global-nav-items li{
-            display: inline-block;
-            zoom: 1;
-            line-height: 28px;
-            font-size: 12px;
-            vertical-align: baseline;
-            list-style: none;
-        }
-        .global-nav-items a {
-            display: inline-block;
-            zoom: 1;
-            padding: 0 12px;
-            height: 28px;
-            color: #d5d5d5;
-            text-decoration: none;
-            cursor: pointer;
-        }
-    </style>
 
 <script type = "text/javascript" src = "/static/js/jquery.min.js"></script>
 <script src="/static/js/jquery.lazyload.js" type="text/javascript"></script>
@@ -164,8 +12,9 @@
 <script src="/static/js/jquery.lazyload.js" type="text/javascript"></script>
 
 <!-- 新 Bootstrap 核心 CSS 文件 -->
-<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
-
+<link rel="stylesheet" href="/static/css/bootstrap.min.css">
+<link rel="stylesheet" href="/static/css/base.css"/>
+<link rel="stylesheet" href="/static/css/search_bar.css"/>
 <!-- 可选的Bootstrap主题文件（一般不用引入） -->
 <!--<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">-->
 
@@ -175,32 +24,48 @@
 <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
 <!--<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>-->
 
-<script src="/static/js/layer/layer.js"></script>
+<script src="/static/js/others.js"></script>
 <script type="text/javascript">
-    function callSearch() {
-        layer.open({
-            type: 1, //page层
-            area: ['500px', '140px'],
-            title: '搜索Samer',
-            shade: 0.3, //遮罩透明度
-            moveType: 0, //拖拽风格，0是默认，1是传统拖动
-            shift: 0, //0-6的动画形式，-1不开启
-//            content: ''
-            content: '<form action="/search" method="post">' +
-                    '<div class="form-group">' +
-                    '<label for="name">输入昵称任意字,寻找Samer</label>' +
-                    '<input name="name" class="form-control" id="name"></input>' +
-                    '</div>' +
-                    '<button type="submit" class="btn btn-default">Submit</button>' +
-                    '</form>'
-
+    function clickSearch() {
+        var keyword = document.getElementById("search-form").value;
+        $.ajax({
+            type: "POST",
+            url: "/search",
+            data: {"name": keyword},
+            dataType: "json",
+            success: function (data) {
+                $.this.html($(data))
+            }
         });
     }
 </script>
-
 {% block head %} {% end %}
 </head>
 <body>
+<!--<div class="content">-->
+<!--<span class="glyphicon glyphicon-search" aria-hidden="true"></span>-->
+<!--</div>-->
+<div class="container search-div">
+	<div class="row">
+        <div class="col-md-6">
+            <div id="custom-search-input" style="width: 500px">
+                <div class="input-group col-md-12">
+                    <form action="/search" method="post">
+                    <input name="name" id="search-form" type="text" class="form-control input-lg" placeholder="昵称任意字符" />
+                    <span class="input-group-btn">
+                        <button class="btn btn-info btn-lg" type="submit" onclick="clickSearch()">
+                            <i class="glyphicon glyphicon-search"></i>
+                        </button>
+                    </span>
+                        </form>
+                </div>
+            </div>
+        </div>
+	</div>
+</div>
+
+<div class="bg"></div>
+
 <div id="hs-global-nav" class="global-nav">
 
 
@@ -236,8 +101,10 @@
                  data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">音乐</a>
           </li>
           <li class="on">
-              <a href="#" onclick="callSearch()"
+              <div class="click1">
+              <a href="#"
                  data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">寻人</a>
+              </div>
           </li>
 
       </ul>

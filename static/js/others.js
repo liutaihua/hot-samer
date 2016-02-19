@@ -1,0 +1,19 @@
+// 处理弹div的
+$(function(){
+	$('.click').click(function(){
+		$('.bg').css({'display':'block'});
+		$('.search-div').css({'display':'block'});
+	});
+	$('.bg').click(function(){
+		//$('.bg').css({'display':'none'});
+		//$('.content').css({'display':'none'});
+	});
+	$('.click1').click(function(){
+		$('.bg').fadeIn(200);
+		$('.search-div').fadeIn(400);
+	});
+	$('.bg').click(function(){
+		$('.bg').fadeOut(200);
+		$('.search-div').fadeOut(200);
+	});
+});

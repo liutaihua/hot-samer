@@ -176,7 +176,7 @@ class LetterHandler(BaseHandler):
         raise gen.Return()
 
 
-class HotestSamerRankHandler(BaseHandler):
+class HottestSamerRankHandler(BaseHandler):
     @gen.coroutine
     def get(self):
         early_time = datetime.datetime.now() - datetime.timedelta(days=7)
@@ -207,9 +207,8 @@ class SearchHandler(BaseHandler):
     def post(self):
         keyword = self.get_argument('name')
         profile_list = []
-        profile_list_dict = {}
         if not keyword:
-            self.render('search_results.html', profile_list=profile_list)
+            self.render('user_list.html', profile_list=profile_list, from_search_page=True)
             raise gen.Return()
         keyword = keyword.encode('utf8')
         # 先查profile表
@@ -247,7 +246,7 @@ handlers = [
     (r"/fun", FunIndex),
     (r"/photography", PhotographyIndex),
     (r"/others", OthersIndex),
-    (r"/hottest-rank", HotestSamerRankHandler),
+    (r"/hottest-rank", HottestSamerRankHandler),
     (r"/search", SearchHandler),
     (r"/music", PopularMusicHandler),
     (r"/letter/(\d+)", LetterHandler),
