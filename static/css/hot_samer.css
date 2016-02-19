@@ -1,0 +1,154 @@
+body {
+    text-align: left;
+}
+
+#container {
+    height: 600px;
+    overflow: scroll;
+}
+
+.title {
+    text-align: center;
+    padding-top: 15px;
+    padding-left: 10px;
+    padding-right: 30px;
+    padding-bottom: 40px;
+    border: 1px solid 000000;
+}
+
+.little_title {
+    text-align: center;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    display: inline;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.left {
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+    background: #FFFFFF;
+}
+
+.right {
+    height: 200px;
+    background: #FF6633;
+    display: inline-block;
+    vertical-align: top;
+/ / 与 左 侧 div 顶 部 对 齐
+}
+
+.top-n {
+    position: absolute;
+    display: inline-block;
+    padding: 0 0.4em;
+    line-height: 1.4em;
+    font-family: 'Times New Rome', serif;
+    background: #dfdfdf;
+    font-size: 11px;
+    border-radius: 2px;
+    color: #fff;
+    left: -5px;
+    top: -6px;
+    text-align: center;
+}
+
+.name {
+    color: #45b;
+    font-size: 14px;
+    margin: 0.8em 0 0;
+. rbox-supple border-top : 1 px solid #f98;
+}
+
+.pic {
+    margin: 0.6em auto;
+    text-align: left;
+    imgborder: 1px solid #eee;
+    padding: 3px;
+border-radius(2 px)
+}
+
+.p-tags {
+    letter-spacing: -3px line-height : 1 px;
+    padding: 0;
+    margin: 0;
+    margin-top: -5px;
+    margin-bottom: -10px;
+
+    font-size: 13px;
+    font-weight: 10;
+    color: #b3b3b3;
+    height: 2.4em;
+    text-align: left;
+}
+
+.p-tags-center {
+    letter-spacing: -3px line-height : 1 px;
+    padding: 0;
+    margin: 0;
+    margin-top: 5px;
+    margin-bottom: -10px;
+
+    font-size: 13px;
+    font-weight: 10;
+    color: #b3b3b3;
+    height: 2.4em;
+    text-align: center;
+}
+
+.p-li {
+    position: relative;
+    vertical-align: top;
+    display: inline-block;
+    margin: 10px 8px 30px;
+}
+
+.rightTop {
+    position: absolute;
+    right: 0;
+    /*left: 0;*/
+    top: 0;
+}
+
+.global-nav {
+    display: block;
+    margin: 0;
+    padding: 0;
+    height: 28px;
+    color: #d5d5d5;
+    background-color: #545652;
+    /*min-width: 950px;*/
+    min-width: 100%;
+    /*position: fixed;*/
+}
+
+.global-nav-items li {
+    display: inline-block;
+    zoom: 1;
+    line-height: 28px;
+    font-size: 12px;
+    vertical-align: baseline;
+    list-style: none;
+}
+
+.global-nav-items a {
+    display: inline-block;
+    zoom: 1;
+    padding: 0 12px;
+    height: 28px;
+    color: #d5d5d5;
+    text-decoration: none;
+    cursor: pointer;
+}
