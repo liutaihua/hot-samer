@@ -59,6 +59,10 @@ class OthersIndex(tornado.web.RequestHandler):
         self.set_header('Access-Control-Allow-Origin', '*')
         return self.render('others.html')
 
+class LetterResultIndex(BaseHandler):
+    def get(self, tuid, success_or_failed):
+        return self.render('success_or_failed.html', tuid=tuid, success_or_failed=success_or_failed)
+
 
 class HotSamerHandler(BaseHandler):
     @gen.coroutine
@@ -159,13 +163,19 @@ class LetterHandler(BaseHandler):
         # resp = requests.post(fetch_url, headers=header, json=body, verify=False)
         if resp:
             if resp.code != 200:
-                self.write('发生失败, 可能由于网络或Same服务器问题, 请手动返回')
-                self.flush()
-            else:
+                self.redirect('/letter/%s/failed'%to_uid)
+                # self.write('发生失败, 可能由于网络或Same服务器问题, 请手动返回')
+                # self.flush()
+            elif json.loads(resp.body)['code'] == 0:
                 print resp.body
+                self.redirect('/letter/%s/success'%to_uid)
                 # self.write(json.dumps(resp.body))
-                self.write('发生成功, 请手工返回')
-                self.flush()
+                # self.write('发生成功, 请手工返回')
+                # self.flush()
+            else:
+                self.redirect('/letter/%s/failed'%to_uid)
+                # self.write('发生失败, 可能由于网络或Same服务器问题, 请手动返回')
+                # self.flush()
                 # self.set_status(301)
                 # self.set_header("Location", 'http://localhost:8080/samer/%s'%to_uid)
                 # yield gen.Task(IOLoop.instance().add_timeout, time.time() + 5)            # self.finish()
@@ -249,6 +259,7 @@ handlers = [
     (r"/hottest-rank", HottestSamerRankHandler),
     (r"/search", SearchHandler),
     (r"/music", PopularMusicHandler),
+    (r"/letter/(\d+)/(.*)", LetterResultIndex),
     (r"/letter/(\d+)", LetterHandler),
     (r'/favicon.ico', tornado.web.StaticFileHandler, dict(url='/static/favicon.ico', permanent=False)),
 ]

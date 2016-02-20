@@ -1,0 +1,13 @@
+﻿{% extends "base.html" %}
+
+{% block body %}
+    <div>
+        <div>
+            {% if success_or_failed == 'success' %}
+            <h4 class="p-tags-center">已送达 <a href="/samer/{{ tuid }}">返回</a> </h4>
+            {% else %}
+            <h4 class="p-tags-center">未送达(Same服务器忙 或 今日总次数已上限) <a href="/samer/{{ tuid }}">返回</a> </h4>
+            {% end %}
+        </div>
+    </div>
+{% end %}
