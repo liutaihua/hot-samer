@@ -1,17 +1,14 @@
 ﻿{% extends "base.html" %}
+{% block head %}
+<script src="/static/js/generate_photo_div.js"></script>
+{% end %}
 
 {% block body %}
-    <div>
+<h4 id="loading-bubble">正在载入热图...</h4>
+    <div id="lazyload">
         <div id="container">
             <script type="text/javascript">
-                $.ajaxSetup({async: false});
-                var main = "";
-                $.getJSON('/hot-samer?offset=0&limit=500&hot_level=2', function (data) {
-                    $.each(data, function (key, val) {
-                        main += '<a target="_blank" href="/samer/' + val['author_uid'] + '"><img class="lazy" data-original="' + val['photo'] + '" src="/static/image/ajax-loader.gif" weight=512 height=256 /></a>';
-                    });
-                });
-              document.getElementById("container").innerHTML = main;
+                generate_photo_div("/hot-samer?offset=0&limit=500&hot_level=2");
             </script>
         </div>
     </div>

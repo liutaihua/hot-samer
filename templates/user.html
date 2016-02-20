@@ -1,7 +1,8 @@
 ﻿{% extends "base.html" %}
 
 {% block body %}
-    <div>
+<h4 id="loading-bubble">正在载入Samer个人信息...</h4>
+    <div id="lazyload">
         <div id="content" class="title">
             {% if not profile %}
                 <p> Same 服务器忙 或 用户已被注销(假如多次刷新无结果)</p>
