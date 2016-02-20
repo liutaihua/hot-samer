@@ -19,10 +19,14 @@
                     </div>
                     </a>
             </li>
+            <script type="text/javascript">
+                document.getElementById("loading-bubble").remove();
+            </script>
             {% end %}
         </div>
     </div>
     <div>
+        <h4 id="loading-bubble-news">正在载入Samer个人信息...</h4>
         <div class="little_title"><h4>Ta的图文动态</h4></div>
         <div class="title">
             {% if not latest_news %}
@@ -51,6 +55,9 @@
             </div>
             {% end %}
             {% end %}
+            <script type="text/javascript">
+                document.getElementById("loading-bubble-news").remove();
+            </script>
         </div>
     </div>
 {% end %}
