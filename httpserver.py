@@ -4,6 +4,7 @@
 import os
 import json
 import sys
+import pwd
 import time
 import requests
 import urllib2
@@ -23,7 +24,12 @@ from lib import session
 from tornado import gen
 from tornado.ioloop import IOLoop
 from lib.base_httphandler import BaseHandler
-from same_spider.secret import header
+
+USER = pwd.getpwuid(os.getuid())[0]
+if USER == 'liutaihua':
+    from same_spider.secret_liutaihua import header
+else:
+    from same_spider.secret import header
 
 
 class MainHandler(tornado.web.RequestHandler):
