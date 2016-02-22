@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Hot-Samer</title>
+<!--<title>Hot-Samer</title>-->
 
 <script type = "text/javascript" src = "/static/js/jquery.min.js"></script>
 <script src="/static/js/jquery.lazyload.js" type="text/javascript"></script>
@@ -26,18 +26,6 @@
 
 <script src="/static/js/others.js"></script>
 <script type="text/javascript">
-    function clickSearch() {
-        var keyword = document.getElementById("search-form").value;
-        $.ajax({
-            type: "POST",
-            url: "/search",
-            data: {"name": keyword},
-            dataType: "json",
-            success: function (data) {
-                $.this.html($(data))
-            }
-        });
-    }
     $(function() {
         $("div#lazyload").lazyload(); // lazyload the photo div
     });
@@ -54,9 +42,9 @@
             <div id="custom-search-input" style="width: 500px">
                 <div class="input-group col-md-12">
                     <form action="/search" method="post">
-                    <input name="name" id="search-form" type="text" class="form-control input-lg" placeholder="昵称任意字符" />
+                    <input name="name" type="text" class="form-control input-lg" placeholder="昵称任意字符" />
                     <span class="input-group-btn">
-                        <button class="btn btn-info btn-lg" type="submit" onclick="clickSearch()">
+                        <button class="btn btn-info btn-lg" type="submit">
                             <i class="glyphicon glyphicon-search"></i>
                         </button>
                     </span>
@@ -67,56 +55,53 @@
 	</div>
 </div>
 
-<div class="bg"></div>
+<div class="bg"></div>   <!-- use in search div -->
 
 <div id="hs-global-nav" class="global-nav">
-
-
     <div class="global-nav-items">
-      <ul style="position: fixed;">
+        <ul style="position: fixed;">
 
-          <li class="on">
-              <a href="/"
-                 data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">最新</a>
-          </li>
-          <li class="on">
-              <a href="/senses"
-                 data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">最热</a>
-          </li>
-          <li class="on">
-              <a href="/fun"
-                 data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">好玩</a>
-          </li>
-          <li class="on">
-              <a href="/photography"
-                 data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">影像</a>
-          </li>
-          <li class="on">
-              <a href="/others"
-                 data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">其他</a>
-          </li>
-          <li class="on">
-              <a href="/hottest-rank"
-                 data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">周红人</a>
-          </li>
-          <li class="on">
-              <a href="/music"
-                 data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">音乐</a>
-          </li>
-          <li class="on">
-              <div class="click1">
-              <a href="#"
-                 data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">寻人</a>
-              </div>
-          </li>
+            <li class="on">
+                <a href="/"
+                   data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">最新</a>
+            </li>
+            <li class="on">
+                <a href="/senses"
+                   data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">最热</a>
+            </li>
+            <li class="on">
+                <a href="/fun"
+                   data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">好玩</a>
+            </li>
+            <li class="on">
+                <a href="/photography"
+                   data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">影像</a>
+            </li>
+            <li class="on">
+                <a href="/others"
+                   data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">其他</a>
+            </li>
+            <li class="on">
+                <a href="/hottest-rank"
+                   data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">周红人</a>
+            </li>
+            <li class="on">
+                <a href="/music"
+                   data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">音乐</a>
+            </li>
+            <li class="on">
+                <div class="click1">
+                    <a href="#"
+                       data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">寻人</a>
+                </div>
+            </li>
 
-      </ul>
+        </ul>
     </div>
-  </div>
+</div>
 
 
 
-<div>
 <div>
     <div class="title"><h1>hot-samer</h1></div>
 

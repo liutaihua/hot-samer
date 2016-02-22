@@ -1,10 +1,18 @@
 ﻿{% extends "base.html" %}
+{% block head %}
+{% if from_search_page %}
+    <title>Hot-Samer 搜寻结果</title>
+{% else %}
+    <title>Hot-Samer 红人榜</title>
+{% end %}
+{% end %}
 
 {% block body %}
     <div>
         <div>
             {% if not profile_list and from_search_page %}
                 <h5> 没有找到, 尝试其他字符. 或hot-samer还未收录此相关samer, hot-samer会一直尝试更新</h5>
+                <a href="/search">返回</a>
             {% elif not profile_list %}
                 <p> Same 服务器忙</p>
             {% else %}

@@ -1,0 +1,66 @@
+﻿{% extends "base.html" %}
+{% block head %}
+<title>Hot-Samer 寻找Samer</title>
+
+    <script type="text/javascript">
+    function clickSearch() {
+        var keyword = document.getElementById("search-form").value;
+        // remove the last search result div object
+        var previous_results = document.getElementsByClassName("search-result");
+        var i;
+        for (i=0;i<previous_results.length;i++) {
+            previous_results[i].remove();
+        }
+
+        // send request
+        $.ajax({
+            type: "POST",
+            url: "/search",
+            data: {"name": keyword, "format": "json"},
+            dataType: "json",
+            success: function (data) {
+                // generate div element with the response data
+                var main = "";
+                $.each(data, function (key, v) {
+                    var val = v[1];
+//                    main += '<a target="_blank" href="/samer/' + val['author_uid'] + '"><img class="lazy" data-original="' + val['photo'] + '" src="/static/image/ajax-loader.gif" weight=512 height=256 /></a>';
+                    main += '<li class="search-result" class="p-li">' +
+                '<div style="background: #93d6ef;" class="top-n">' +key+1+'</div>'+
+                    '<a href="val' + val['id'] + '" target="_blank" title="">'+
+                    '<div class="pic left">'+
+                        '<img class="img-circle" src="'+ val['avatar'] +'" width=128 height=128 alt="Ballade"/>'+
+                        '<p class="p-tags" >名字: '+val['username']+'</p>'+
+                        '<p class="p-tags" >内容: '+val['senses'] +'</p>'+
+                        '<p class="p-tags">坐标: '+val['timezone'] +'</p>'+
+                        '<p class="p-tags">加入时间: '+val['join_at'].split(" ")[0] +'</p>'+
+                    '</div>'+
+                    '</a></li>'
+                });
+                document.getElementById("search-container").innerHTML = main;
+            }
+        });
+    }
+    </script>
+
+{% end %}
+
+{% block body %}
+<div>
+    <div class="col-md-6">
+        <div id="custom-search-input">
+            <div class="input-group col-md-12">
+                <input name="name" id="search-form" type="text" class="form-control input-lg" placeholder="昵称任意字符"/>
+                    <span class="input-group-btn">
+                        <button class="btn btn-info btn-lg" type="submit" onclick="clickSearch()">
+                            <i class="glyphicon glyphicon-search"></i>
+                        </button>
+                    </span>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="lazyload">
+    <div id="search-container">
+    </div>
+</div>
+{% end %}

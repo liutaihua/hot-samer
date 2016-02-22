@@ -214,14 +214,18 @@ class HottestSamerRankHandler(BaseHandler):
         for uid, profile in profile_list.items():
             profile['likes_count'] = rank_data[str(uid)]
         profile_list = sorted(profile_list.items(), key=lambda x:x[1]['likes_count'], reverse=True)
-        self.render('user_list.html', profile_list=profile_list)
+        self.render('user_list.html', profile_list=profile_list, from_search_page=False)
         raise gen.Return()
 
 
 class SearchHandler(BaseHandler):
+    def get(self):
+        self.render("search.html")
+
     @gen.coroutine
     def post(self):
         keyword = self.get_argument('name')
+        client_format = self.get_argument('format', None)
         profile_list = []
         if not keyword:
             self.render('user_list.html', profile_list=profile_list, from_search_page=True)
@@ -240,7 +244,10 @@ class SearchHandler(BaseHandler):
             profile_dict_from_ugc = yield self.get_multi_profile_from_es(uids)
             profile_list_dict.update(profile_dict_from_ugc)
         profile_list = sorted(profile_list_dict.items(), key=lambda x:x[1]['_score'], reverse=True)
-        self.render('user_list.html', profile_list=profile_list, from_search_page=True)
+        if client_format == 'json':
+            self.finish(json.dumps(profile_list))
+        else:
+            self.render('user_list.html', profile_list=profile_list, from_search_page=True)
         raise gen.Return()
 
 class PopularMusicHandler(BaseHandler):
