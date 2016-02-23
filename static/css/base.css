@@ -1,5 +1,7 @@
 body {
     text-align: left;
+height:100%;
+
 }
 
 #container {
@@ -186,3 +188,29 @@ border-radius(2 px)
 
 /*div弹出相关 end*/
 
+body,html {
+margin: 0;
+padding: 0;
+font: 12px/1.5 arial;
+height:100%;
+}
+#content {
+min-height:100%;
+position: relative;
+}
+#main {
+padding: 10px;
+padding-bottom: 60px;
+}
+#footer {
+position: absolute;
+bottom: 0;
+padding: 10px 0;
+background-color: #ffffff;
+width: 100%;
+}
+#footer h1 {
+font: 20px/2 Arial;
+margin:0;
+padding:0 10px;
+}
