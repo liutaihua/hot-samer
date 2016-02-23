@@ -32,7 +32,7 @@
                         var sort_number = new Number(key) + 1;
                         main += '<li class="p-li">' +
                                 '<div style="background: #93d6ef;" class="top-n">' + sort_number + '</div>' +
-                                '<a href="val' + val['id'] + '" target="_blank" title="">' +
+                                '<a href="/samer/' + val['id'] + '" target="_blank" title="">' +
                                 '<div class="pic left">' +
                                 '<img class="img-circle" src="' + val['avatar'] + '" width=128 height=128 alt="Ballade"/>' +
                                 '<p class="p-tags" >名字: ' + val['username'] + '</p>' +
@@ -52,7 +52,7 @@
 {% end %}
 
 {% block body %}
-<div>
+<div style="width: 2800px">
     <div class="col-md-6">
         <div id="custom-search-input">
             <div class="input-group col-md-12">
@@ -68,7 +68,7 @@
     </div>
 </div>
 
-<div id="lazyload">
+<div id="lazyload" style="width: 100%;margin-top: 50px">
     <div id="search-container">
     </div>
 </div>
