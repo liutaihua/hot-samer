@@ -243,6 +243,18 @@ class SearchHandler(BaseHandler):
         if uids:
             profile_dict_from_ugc = yield self.get_multi_profile_from_es(uids)
             profile_list_dict.update(profile_dict_from_ugc)
+        if not profile_list_dict:
+            # 还是没有, 就搜索发帖内容中的匹配
+            sql = 'SELECT * FROM same/user_ugc where txt="%s"' % keyword
+            data = yield self.query_from_es(sql)
+
+            uids = [i['author_uid'] for i in data]
+            if len(uids) > 100:
+                uids = uids[:100]
+            if uids:
+                profile_dict_from_ugc = yield self.get_multi_profile_from_es(uids)
+                profile_list_dict.update(profile_dict_from_ugc)
+
         profile_list = sorted(profile_list_dict.items(), key=lambda x:x[1]['_score'], reverse=True)
         if client_format == 'json':
             self.finish(json.dumps(profile_list))

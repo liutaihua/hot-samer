@@ -24,7 +24,12 @@ from lib.httputil \
 import session
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
-from same_spider.secret import header
+import pwd
+USER = pwd.getpwuid(os.getuid())[0]
+if USER == 'liutaihua':
+    from same_spider.secret_liutaihua import header
+else:
+    from same_spider.secret import header
 
 
 
@@ -93,8 +98,16 @@ class BaseHandler(tornado.web.RequestHandler):
         profile_list = yield self.query_from_es(sql)
         # profile_list = [i['_source'] for i in json.loads(resp.body)['hits']['hits']]
         data = {}
+        in_es_uids = [i['id'] for i in profile_list]
+        not_in_es_uids = list(set(map(int, uids)) - set(map(int, in_es_uids)))
+        for uid in not_in_es_uids:
+            profile = yield self.get_profile(uid)
+            if profile:
+                profile_list.append(profile)
+                print profile
         for profile in profile_list:
-            profile['join_at'] = datetime.datetime.fromtimestamp(int(profile['join_at'])).strftime('%Y-%m-%d %H:%M:%S')
+            if str(profile['join_at']).isdigit():
+                profile['join_at'] = datetime.datetime.fromtimestamp(int(profile['join_at'])).strftime('%Y-%m-%d %H:%M:%S')
             data[profile['id']] = profile
         raise gen.Return(data)
 
