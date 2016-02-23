@@ -11,6 +11,8 @@
         for (i=0;i<previous_results.length;i++) {
             previous_results[i].remove();
         }
+
+        document.getElementById("search-container").innerHTML = '<div id="loading-search"><h4>Loading...</h4></div>'
         // send request
         $.ajax({
             type: "POST",
@@ -20,22 +22,28 @@
             success: function (data) {
                 // generate div element with the response data
                 var main = "";
-                $.each(data, function (key, v) {
-                    var val = v[1];
-                    var sort_number = new Number(key) + 1;
-                    main += '<li class="p-li">' +
-                        '<div style="background: #93d6ef;" class="top-n">' +sort_number+'</div>'+
-                        '<a href="val' + val['id'] + '" target="_blank" title="">'+
-                        '<div class="pic left">'+
-                            '<img class="img-circle" src="'+ val['avatar'] +'" width=128 height=128 alt="Ballade"/>'+
-                            '<p class="p-tags" >名字: '+val['username']+'</p>'+
-                            '<p class="p-tags" >内容: '+val['senses'] +'</p>'+
-                            '<p class="p-tags">坐标: '+val['timezone'] +'</p>'+
-                            '<p class="p-tags">加入时间: '+val['join_at'].split(" ")[0] +'</p>'+
-                        '</div>'+
-                        '</a></li>'
-                });
-                document.getElementById("search-container").innerHTML = main;
+                document.getElementById("loading-search").remove(); // 结果出来后去除loading显示
+                if (data.length == 0) {
+//                    alert("傻逼傻逼");
+                    document.getElementById("search-container").innerHTML = '<div class="p-li"><h5>没有找到, 尝试其他字符. 或hot-samer还未收录此相关samer, hot-samer会一直尝试更新</h5></div>';
+                } else {
+                    $.each(data, function (key, v) {
+                        var val = v[1];
+                        var sort_number = new Number(key) + 1;
+                        main += '<li class="p-li">' +
+                                '<div style="background: #93d6ef;" class="top-n">' + sort_number + '</div>' +
+                                '<a href="val' + val['id'] + '" target="_blank" title="">' +
+                                '<div class="pic left">' +
+                                '<img class="img-circle" src="' + val['avatar'] + '" width=128 height=128 alt="Ballade"/>' +
+                                '<p class="p-tags" >名字: ' + val['username'] + '</p>' +
+                                '<p class="p-tags" >内容: ' + val['senses'] + '</p>' +
+                                '<p class="p-tags">坐标: ' + val['timezone'] + '</p>' +
+                                '<p class="p-tags">加入时间: ' + val['join_at'].split(" ")[0] + '</p>' +
+                                '</div>' +
+                                '</a></li>'
+                    });
+                    document.getElementById("search-container").innerHTML = main;
+                }
             }
         });
     }

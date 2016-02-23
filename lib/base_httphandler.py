@@ -102,9 +102,9 @@ class BaseHandler(tornado.web.RequestHandler):
         not_in_es_uids = list(set(map(int, uids)) - set(map(int, in_es_uids)))
         for uid in not_in_es_uids:
             profile = yield self.get_profile(uid)
+            profile['_score'] = 0
             if profile:
                 profile_list.append(profile)
-                print profile
         for profile in profile_list:
             if str(profile['join_at']).isdigit():
                 profile['join_at'] = datetime.datetime.fromtimestamp(int(profile['join_at'])).strftime('%Y-%m-%d %H:%M:%S')
