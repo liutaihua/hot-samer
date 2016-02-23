@@ -56,9 +56,10 @@
     <div class="col-md-6">
         <div id="custom-search-input">
             <div class="input-group col-md-12">
-                <input name="name" id="search-form" type="text" class="form-control input-lg" placeholder="昵称任意字符, Ta的动态中的某个内容关键字"/>
+                <input name="name" onkeypress="if(event.keyCode==13) {btn.click();return false;}"
+                       id="search-form" type="text" class="form-control input-lg" placeholder="昵称任意字符, Ta的动态中的某个内容关键字"/>
                     <span class="input-group-btn">
-                        <button class="btn btn-info btn-lg" type="submit" onclick="clickSearch()">
+                        <button id="btn" class="btn btn-info btn-lg" type="submit" onclick="clickSearch()">
                             <i class="glyphicon glyphicon-search"></i>
                         </button>
                     </span>
@@ -66,8 +67,10 @@
         </div>
     </div>
 </div>
+
 <div id="lazyload">
     <div id="search-container">
     </div>
 </div>
+
 {% end %}
