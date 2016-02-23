@@ -128,7 +128,7 @@ class BaseHandler(tornado.web.RequestHandler):
     @gen.coroutine
     def get_profile_from_same(self, uid):
         fetch_url = 'https://v2.same.com/user/%s/profile' % uid
-        resp = yield self.fetch_url(fetch_url, skip_except_handle=True, headers=header)
+        resp = yield self.fetch_url(fetch_url, skip_except_handle=True, headers=header, connect_timeout=8, request_timeout=10)
         data = {'code': 500}
         profile = {}
         if resp:
