@@ -98,13 +98,15 @@ class BaseHandler(tornado.web.RequestHandler):
         profile_list = yield self.query_from_es(sql)
         # profile_list = [i['_source'] for i in json.loads(resp.body)['hits']['hits']]
         data = {}
-        in_es_uids = [i['id'] for i in profile_list]
-        not_in_es_uids = list(set(map(int, uids)) - set(map(int, in_es_uids)))
-        for uid in not_in_es_uids:
-            profile = yield self.get_profile(uid)
-            profile['_score'] = 0
-            if profile:
-                profile_list.append(profile)
+        if not skip_silence_user:
+            # hottest-rank外的请求, 没取到的uid profile数据需要再次尝试从same api获取一次
+            in_es_uids = [i['id'] for i in profile_list]
+            not_in_es_uids = list(set(map(int, uids)) - set(map(int, in_es_uids)))
+            for uid in not_in_es_uids:
+                profile = yield self.get_profile(uid)
+                if profile:
+                    profile['_score'] = 0
+                    profile_list.append(profile)
         for profile in profile_list:
             if str(profile['join_at']).isdigit():
                 profile['join_at'] = datetime.datetime.fromtimestamp(int(profile['join_at'])).strftime('%Y-%m-%d %H:%M:%S')

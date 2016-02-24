@@ -207,10 +207,9 @@ class HottestSamerRankHandler(BaseHandler):
             rank_data[str(ugc['author_uid'])] += int(ugc['likes'])
         uids = rank_data.keys()
         profile_list = {}
-        if len(uids) > 200:
-            for sub_uids in [uids[i:i+200] for i in range(0, len(uids), 200)]:
-                sub_profile_list = yield self.get_multi_profile_from_es(sub_uids, skip_silence_user=True)
-                profile_list.update(sub_profile_list)
+        for sub_uids in [uids[i:i + 200] for i in range(0, len(uids), 200)]:
+            sub_profile_list = yield self.get_multi_profile_from_es(sub_uids, skip_silence_user=True)
+            profile_list.update(sub_profile_list)
         for uid, profile in profile_list.items():
             profile['likes_count'] = rank_data[str(uid)]
         profile_list = sorted(profile_list.items(), key=lambda x:x[1]['likes_count'], reverse=True)
