@@ -69,6 +69,11 @@ class LetterResultIndex(BaseHandler):
     def get(self, tuid, success_or_failed):
         return self.render('success_or_failed.html', tuid=tuid, success_or_failed=success_or_failed)
 
+class TestIndex(BaseHandler):
+    def get(self):
+        return self.render('test.html')
+
+
 
 class HotSamerHandler(BaseHandler):
     @gen.coroutine
@@ -78,7 +83,7 @@ class HotSamerHandler(BaseHandler):
         limit = int(self.get_argument('limit', 100))
         hot_level = self.get_argument('hot_level', '0')
 
-        sql = "select photo, author_uid, author_name channel_id, views, likes " \
+        sql = "select id, photo, author_uid, author_name channel_id, views, likes " \
               "from same/user_ugc"
 
         channel_ids = {
@@ -285,6 +290,7 @@ handlers = [
     (r"/music", PopularMusicHandler),
     (r"/letter/(\d+)/(.*)", LetterResultIndex),
     (r"/letter/(\d+)", LetterHandler),
+    (r"/test", TestIndex),
     (r'/favicon.ico', tornado.web.StaticFileHandler, dict(url='/static/favicon.ico', permanent=False)),
 ]
 

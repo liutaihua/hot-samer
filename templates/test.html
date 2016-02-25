@@ -1,0 +1,55 @@
+<!--<!DOCTYPE html>-->
+<!--<html>-->
+  <!--<head>-->
+    <!--<meta charset="utf-8">-->
+    <!--<title>React Tutorial</title>-->
+    <!--&lt;!&ndash; Not present in the tutorial. Just for basic styling. &ndash;&gt;-->
+    <!--<link rel="stylesheet" href="css/base.css" />-->
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react.js"></script>-->
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-dom.js"></script>-->
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.15/browser.js"></script>-->
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>-->
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>-->
+  <!--</head>-->
+  <!--<body>-->
+    <!--<div id="content"></div>-->
+    <!--<script type="text/babel" src="/static/js/test.js"></script>-->
+    <!--<script type="text/babel">-->
+      <!--// To get started with this tutorial running your own code, simply remove-->
+      <!--// the script tag loading scripts/example.js and start writing code here.-->
+    <!--</script>-->
+  <!--</body>-->
+<!--</html>-->
+
+
+
+{% extends "base.html" %}
+{% block head %}
+<title>Hot-Samer</title>
+
+<!--<script src="/static/js/generate_photo_div.js"></script>-->
+    <!--<link rel="stylesheet" href="css/base.css" />-->
+    <script src="/static/js/react/react.js"></script>
+    <script src="/static/js/react/react-dom.js"></script>
+    <script src="/static/js/react/browser.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>-->
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>-->
+
+{% end %}
+
+{% block body %}
+<!--<h4 id="loading-bubble">正在载入热图...</h4>-->
+    <div id="lazyload">
+        <div id="container">
+            <!--<script type="text/javascript">-->
+                <!--generate_photo_div("/hot-samer?offset=0&limit=500");-->
+            <!--</script>-->
+            <script type="text/babel" src="/static/js/test.js"></script>
+            <script type="text/babel">
+                // To get started with this tutorial running your own code, simply remove
+                // the script tag loading scripts/example.js and start writing code here.
+            </script>
+        </div>
+    </div>
+<script type="text/javascript" src="/static/js/scroll-load.js"></script>
+{% end %}
