@@ -63,6 +63,7 @@ var CommentBox = React.createClass({
   render: function() {
     return (
       <div className="commentBox">
+      <h4>使用React JS 作定时刷新页面</h4>
         <CommentList data={this.state.data} />
       </div>
     );
