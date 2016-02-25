@@ -27,7 +27,7 @@
 {% block head %}
 <title>Hot-Samer</title>
 
-<!--<script src="/static/js/generate_photo_div.js"></script>-->
+<script src="/static/js/generate_photo_div.js"></script>
     <!--<link rel="stylesheet" href="css/base.css" />-->
     <script src="/static/js/react/react.js"></script>
     <script src="/static/js/react/react-dom.js"></script>
@@ -38,12 +38,10 @@
 {% end %}
 
 {% block body %}
-<!--<h4 id="loading-bubble">正在载入热图...</h4>-->
-    <div id="lazyload">
-        <div id="container">
-            <!--<script type="text/javascript">-->
-                <!--generate_photo_div("/hot-samer?offset=0&limit=500");-->
-            <!--</script>-->
+<h4 id="loading-bubble">正在载入热图...</h4>
+
+    <div>
+        <div id="container-react">
             <script type="text/babel" src="/static/js/test.js"></script>
             <script type="text/babel">
                 // To get started with this tutorial running your own code, simply remove
@@ -51,5 +49,15 @@
             </script>
         </div>
     </div>
+
+
+    <div id="lazyload">
+        <div id="container">
+            <script type="text/javascript">
+                generate_photo_div("/hot-samer?offset=50&limit=500");
+            </script>
+        </div>
+    </div>
 <script type="text/javascript" src="/static/js/scroll-load.js"></script>
+
 {% end %}
