@@ -69,7 +69,7 @@ var PicBox = React.createClass({
         return (
             <div className="PicBox">
                 <div className="title"><h1>hot-samer</h1></div>
-                <h5>本页面使用React JS 局部div刷新, 定时ajax刷新div</h5>
+                <h5>将自动获取最新热图</h5>
                 <div id="loading-div"></div>
                 <PicList data={this.state.data}/>
             </div>

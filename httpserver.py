@@ -35,9 +35,9 @@ else:
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
         self.set_header('Access-Control-Allow-Origin', '*')
-        if USER == 'liutaihua':
-            return self.render('index-test.html')
-        return self.render('index.html')
+        # if USER == 'liutaihua':
+        #     return self.render('index-test.html')
+        return self.render('index-test.html')
 
 
 class SortSensesHandler(tornado.web.RequestHandler):
