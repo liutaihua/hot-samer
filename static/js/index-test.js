@@ -17,12 +17,20 @@ var PicBox = React.createClass({
             type: 'GET',
             cache: false,
             success: function (data) {
+                console.log("get data success pre setState");
                 this.setState({data: JSON.parse(data)});
+                console.log("get data success has setState");
             }.bind(this),
             error: function (xhr, status, err) {
                 console.error(this.props.url, status, err.toString());
             }.bind(this)
         });
+    },
+    componentWillUpdate: function(nextProps, nextState) {
+        console.log("PicBox state will change,"+nextProps+nextState);
+    },
+    componentDidUpdate: function(prevProps, prevState) {
+        console.log("PicBox state has change,"+prevProps+prevState);
     },
     getInitialState: function () {
         return {data: []};
@@ -87,8 +95,10 @@ var NavBox = React.createClass({
     handleClick: function(restApi){
         var picBox = this.refs.PicBox;
         console.log('get from restful: '+restApi);
+        picBox.setState({data: []}); // 清下之后再load
         picBox.cancelIntervalTask();
-        picBox.loadPicturesFromServer(restApi)
+        picBox.loadPicturesFromServer(restApi);
+        //document.getElementById("loading-div").remove();
         // set intervalTask again
         picBox.setIntervalTask(restApi);
     },

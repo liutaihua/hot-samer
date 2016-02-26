@@ -10,21 +10,7 @@
 <script src="/static/js/react/react-dom.js"></script>
 <script src="/static/js/react/browser.js"></script>
 <script type = "text/javascript" src = "/static/js/jquery.min.js"></script>
-<!--<script src="/static/js/jquery.lazyload.js" type="text/javascript"></script>-->
-
-
-    <style type="text/css">
-* {
-    padding: 0;
-    margin: 0;
-}
-
-html {
-    font: 14px normal Arial, sans-serif;
-    color: #626771;
-    background-color: #fff;
-}
-    </style>
+<script src="/static/js/jquery.lazyload.js" type="text/javascript"></script>
 
 </head>
 <body>
@@ -32,79 +18,15 @@ html {
     <a href="https://github.com/liutaihua/hot-samer"><img style="position: absolute; top: 0; right: 0; border: 0;" src="/static/image/forkme_right_red_aa0000.png" alt="Fork me on GitHub" data-canonical-src="/static/image/forkme_right_red_aa0000.png"></a>
 
     <div id="body">
-<script type="text/babel" src="/static/js/index-test.js"></script>
-<script type="text/babel"></script>
-</div>
+        <div id="loading-bar"></div>
+        <script type="text/babel" src="/static/js/index-test.js"></script>
+        <script type="text/babel"></script>
+    </div>
+    <script type="text/javascript" src="/static/js/scroll-load.js"></script>
 
-<!--<div id="hs-global-nav" class="global-nav">-->
-    <!--<div class="global-nav-items" id="container-nav">-->
-        <!--&lt;!&ndash;<ul style="position: fixed;" >&ndash;&gt;-->
-            <!--<script type="text/babel" src="/static/js/index-test.js"></script>-->
-            <!--<script type="text/babel">-->
-                <!--// To get started with this tutorial running your own code, simply remove-->
-                <!--// the script tag loading scripts/example.js and start writing code here.-->
-            <!--</script>-->
-            <!--&lt;!&ndash;<li class="on">&ndash;&gt;-->
-                <!--&lt;!&ndash;<a href="/"&ndash;&gt;-->
-                   <!--&lt;!&ndash;data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">最新</a>&ndash;&gt;-->
-            <!--&lt;!&ndash;</li>&ndash;&gt;-->
-            <!--&lt;!&ndash;<li class="on">&ndash;&gt;-->
-                <!--&lt;!&ndash;<a href="/senses"&ndash;&gt;-->
-                   <!--&lt;!&ndash;data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">最热</a>&ndash;&gt;-->
-            <!--&lt;!&ndash;</li>&ndash;&gt;-->
-            <!--&lt;!&ndash;<li class="on">&ndash;&gt;-->
-                <!--&lt;!&ndash;<a href="/fun"&ndash;&gt;-->
-                   <!--&lt;!&ndash;data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">自画</a>&ndash;&gt;-->
-            <!--&lt;!&ndash;</li>&ndash;&gt;-->
-            <!--&lt;!&ndash;<li class="on">&ndash;&gt;-->
-                <!--&lt;!&ndash;<a href="/photography"&ndash;&gt;-->
-                   <!--&lt;!&ndash;data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">摄影</a>&ndash;&gt;-->
-            <!--&lt;!&ndash;</li>&ndash;&gt;-->
-            <!--&lt;!&ndash;<li class="on">&ndash;&gt;-->
-                <!--&lt;!&ndash;<a href="/others"&ndash;&gt;-->
-                   <!--&lt;!&ndash;data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">其他</a>&ndash;&gt;-->
-            <!--&lt;!&ndash;</li>&ndash;&gt;-->
-            <!--&lt;!&ndash;<li class="on">&ndash;&gt;-->
-                <!--&lt;!&ndash;<a href="/hottest-rank"&ndash;&gt;-->
-                   <!--&lt;!&ndash;data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">红人</a>&ndash;&gt;-->
-            <!--&lt;!&ndash;</li>&ndash;&gt;-->
-            <!--&lt;!&ndash;<li class="on">&ndash;&gt;-->
-                <!--&lt;!&ndash;<a href="/music"&ndash;&gt;-->
-                   <!--&lt;!&ndash;data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">在听</a>&ndash;&gt;-->
-            <!--&lt;!&ndash;</li>&ndash;&gt;-->
-            <!--&lt;!&ndash;<li class="on">&ndash;&gt;-->
-                <!--&lt;!&ndash;<a href="/search"&ndash;&gt;-->
-                   <!--&lt;!&ndash;data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">寻人</a>&ndash;&gt;-->
-            <!--&lt;!&ndash;</li>&ndash;&gt;-->
-            <!--&lt;!&ndash;<li class="on">&ndash;&gt;-->
-                <!--&lt;!&ndash;<a href="/test"&ndash;&gt;-->
-                   <!--&lt;!&ndash;data-moreurl-dict="{&quot;from&quot;:&quot;top-nav-click-main&quot;,&quot;uid&quot;:&quot;45674332&quot;}">实验室</a>&ndash;&gt;-->
-            <!--&lt;!&ndash;</li>&ndash;&gt;-->
-        <!--&lt;!&ndash;</ul>&ndash;&gt;-->
-    <!--</div>-->
-<!--</div>-->
-    <!--&lt;!&ndash; This element's contents will be replaced with your component. &ndash;&gt;-->
-<!--<div>-->
-    <!--<div class="title"><h1>hot-samer</h1></div>-->
-
-    <!--<div>-->
-        <!--<h4 id="loading-bubble">正在载入热图...</h4>-->
-        <!--<div id="container-react">-->
-            <!--&lt;!&ndash;<script type="text/babel" src="/static/js/test.js"></script>&ndash;&gt;-->
-            <!--<script type="text/babel">-->
-                <!--// To get started with this tutorial running your own code, simply remove-->
-                <!--// the script tag loading scripts/example.js and start writing code here.-->
-            <!--</script>-->
-        <!--</div>-->
-    <!--</div>-->
-<!--</div>-->
-
-
-<!--<div id="footer">-->
     <footer>
         <p style="text-align: center;"> &copy; 2016 <a href="https://github.com/liutaihua/hot-samer">liutaihua(github) </a>all rights reserved</p>
     </footer>
-<!--</div>-->
 
 </body>
 
