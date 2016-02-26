@@ -1,4 +1,4 @@
-var Comment = React.createClass({
+var Pic = React.createClass({
     render: function () {
         return (
             <a target="_blank" href={'/samer/' + this.props.author_uid}>
@@ -9,8 +9,8 @@ var Comment = React.createClass({
     }
 });
 
-var CommentBox = React.createClass({
-    loadCommentsFromServer: function () {
+var PicBox = React.createClass({
+    loadPicturesFromServer: function () {
         $.ajax({
             url: this.props.url,
             //dataType: 'json',
@@ -28,38 +28,38 @@ var CommentBox = React.createClass({
         return {data: []};
     },
     componentDidMount: function () {
-        this.loadCommentsFromServer();
-        setInterval(this.loadCommentsFromServer, this.props.pollInterval);
+        this.loadPicturesFromServer();
+        setInterval(this.loadPicturesFromServer, this.props.pollInterval);
         document.getElementById("loading-bubble").remove();  // 清除loading提示
     },
     render: function () {
         return (
-            <div className="commentBox">
+            <div className="PicBox">
                 <h4>使用React JS 作定时刷新页面</h4>
-                <CommentList data={this.state.data}/>
+                <PicList data={this.state.data}/>
             </div>
         );
     }
 });
 
-var CommentList = React.createClass({
+var PicList = React.createClass({
     render: function () {
-        var commentNodes = this.props.data.map(function (comment) {
+        var PicNode = this.props.data.map(function (picData) {
             return (
-                <Comment author_uid={comment.author_uid} photo_url={comment.photo} key={comment.id}>
-                </Comment>
+                <Pic author_uid={picData.author_uid} photo_url={picData.photo} key={picData.id}>
+                </Pic>
             );
         });
         return (
-            <div className="commentList">
-                {commentNodes}
+            <div className="PicList">
+                {PicNode}
             </div>
         );
     }
 });
 
 ReactDOM.render(
-    <CommentBox url="/hot-samer?offset=0&limit=200" pollInterval={20000}/>,
+    <PicBox url="/hot-samer?offset=0&limit=200" pollInterval={20000}/>,
     document.getElementById('container-react')
 );
 
