@@ -1,3 +1,16 @@
+//var React = require('react');
+//var Loading = require('react-loading');
+//require(['static/js/react-loading']);
+
+var LoadingComponent = React.createClass({
+  render: function() {
+    return (
+        <Loading type='bubbles' color='#030102'>
+        </Loading>
+    );
+  }
+});
+
 var Pic = React.createClass({
     render: function () {
         return (
@@ -57,6 +70,7 @@ var PicBox = React.createClass({
             <div className="PicBox">
                 <div className="title"><h1>hot-samer</h1></div>
                 <h5>本页面使用React JS 局部div刷新, 定时ajax刷新div</h5>
+                <div id="loading-div"></div>
                 <PicList data={this.state.data}/>
             </div>
         );
@@ -66,10 +80,16 @@ var PicBox = React.createClass({
 var PicList = React.createClass({
     render: function () {
         var PicNode = this.props.data.map(function (picData) {
-            return (
-                <Pic author_uid={picData.author_uid} photo_url={picData.photo} key={picData.id}>
-                </Pic>
-            );
+            if (picData.author_uid == "show-loading-prompt") {
+                return (
+                    <LoadingComponent key={picData.id}></LoadingComponent>
+                );
+            } else {
+                return (
+                    <Pic author_uid={picData.author_uid} photo_url={picData.photo} key={picData.id}>
+                    </Pic>
+                );
+            }
         });
         return (
             <div className="PicList">
@@ -95,7 +115,7 @@ var NavBox = React.createClass({
     handleClick: function(restApi){
         var picBox = this.refs.PicBox;
         console.log('get from restful: '+restApi);
-        picBox.setState({data: []}); // 清下之后再load
+        picBox.setState({data: [{author_uid: "show-loading-prompt", id: 999}]}); // load前给假数据, 用于显示Loading提示
         picBox.cancelIntervalTask();
         picBox.loadPicturesFromServer(restApi);
         //document.getElementById("loading-div").remove();
@@ -121,7 +141,6 @@ var NavBox = React.createClass({
                 );
             }
         });
-
         return (
             <div>
             <div id="hs-global-nav" className="global-nav">
