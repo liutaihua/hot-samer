@@ -154,7 +154,7 @@ var data = [
 ];
 ReactDOM.render(< NavBox items={ data }
     />,
-    document.body
+    document.getElementById('body')
 );
 
 //ReactDOM.render(
