@@ -35,6 +35,8 @@ else:
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
         self.set_header('Access-Control-Allow-Origin', '*')
+        if USER == 'liutaihua':
+            return self.render('index-test.html')
         return self.render('index.html')
 
 
@@ -71,7 +73,7 @@ class LetterResultIndex(BaseHandler):
 
 class TestIndex(BaseHandler):
     def get(self):
-        return self.render('test.html')
+        return self.render('index-test.html')
 
 
 
@@ -276,6 +278,7 @@ class PopularMusicHandler(BaseHandler):
               'order by likes desc,views desc,timestamp desc LIMIT 200' %(filter_date.isoformat())
         print sql
         music_list = yield self.query_from_es(sql)
+        print music_list
         self.render('music_list.html', music_list=music_list)
         raise gen.Return()
 
@@ -292,7 +295,7 @@ handlers = [
     (r"/music", PopularMusicHandler),
     (r"/letter/(\d+)/(.*)", LetterResultIndex),
     (r"/letter/(\d+)", LetterHandler),
-    (r"/test", TestIndex),
+    (r"/lab", TestIndex),
     (r'/favicon.ico', tornado.web.StaticFileHandler, dict(url='/static/favicon.ico', permanent=False)),
 ]
 
