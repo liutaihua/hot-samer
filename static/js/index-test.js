@@ -108,7 +108,7 @@ var NavBox = React.createClass({
         const thisSelf = this;  //
         var NavNode = this.props.items.map(function (m) {
             var boundClick = thisSelf.handleClick.bind(this, m.href);
-            var exclude_ajax = ["/test", "/search", "/music", "/hottest-rank"];
+            var exclude_ajax = ["/lab", "/search", "/music", "/hottest-rank"];
             if (exclude_ajax.indexOf(m.href) > -1) {
                 return (
                     <Nav href_uri={m.href} nav_name={m.nav_name} key={m.id}>
@@ -149,12 +149,12 @@ var data = [
     {href: "/hottest-rank", nav_name: "红人", id: 6},
     {href: "/music", nav_name: "在听", id: 7},
     {href: "/search", nav_name: "寻人", id: 8},
-    {href: "/test", nav_name: "实验室", id: 9},
+    {href: "/lab", nav_name: "实验室", id: 9},
 
 ];
 ReactDOM.render(< NavBox items={ data }
     />,
-    document.getElementById('body')
+    document.body
 );
 
 //ReactDOM.render(
