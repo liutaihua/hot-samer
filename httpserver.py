@@ -100,7 +100,9 @@ class HotSamerHandler(BaseHandler):
             sort_condition = 'and timestamp> "%s" order by likes desc,views desc,timestamp desc ' \
                              'limit %d offset %s' % (time_condition.isoformat(), limit, offset)
         else:
-            sort_condition = 'order by timestamp desc limit %d offset %s' % (limit, offset)
+            sort_condition = 'order by timestamp desc limit %d' % limit
+        if offset:
+            sort_condition += ' offset %s' % offset
         sql += sort_condition
         photo_list = yield self.query_from_es(sql)
         self.set_header('Access-Control-Allow-Origin', '*')

@@ -2,3 +2,5 @@
 *.pyc
 *.un~
 same_spider/secret_liutaihua.py
+node_modules
+react-search-input
