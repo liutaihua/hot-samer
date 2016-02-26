@@ -9,6 +9,11 @@ hot-samer
 
 有这些数据， 可以做很多帖子排名啊，用户查看啊， 红人列表啊什么的有意思的事情
 
+
+###
+前端用的ReactJS  
+后端是Tornado
+
 需要自己部署玩的话: requirements 文件是我的pip freeze， 比较懒就没有仔细过滤了 使用 pip install -r requirements 自动安装就可以了
 
 爬虫脚本是 same_spider/collect_data_into_es.py  
