@@ -282,6 +282,13 @@ class PopularMusicHandler(BaseHandler):
         self.render('music_list.html', music_list=music_list)
         raise gen.Return()
 
+class LikesHandler(BaseHandler):
+    @gen.coroutine
+    def post(self, photo_id):
+        is_succeed = yield self.update_likes(photo_id)
+        self.finish(json.dumps({'code': 0, 'res': is_succeed}))
+        raise gen.Return()
+
 handlers = [
     (r"/", MainHandler),
     (r"/senses", SortSensesHandler),
@@ -296,6 +303,7 @@ handlers = [
     (r"/letter/(\d+)/(.*)", LetterResultIndex),
     (r"/letter/(\d+)", LetterHandler),
     (r"/lab", TestIndex),
+    (r"/photo/(\d+)/likes", LikesHandler),
     (r'/favicon.ico', tornado.web.StaticFileHandler, dict(url='/static/favicon.ico', permanent=False)),
 ]
 

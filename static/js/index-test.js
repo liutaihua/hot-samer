@@ -12,12 +12,36 @@ var LoadingComponent = React.createClass({
 });
 
 var Pic = React.createClass({
+    onPraiseHeartClick: function(photoId) {
+        $.ajax({
+            url: 'http://localhost:8080/photo/'+photoId+'/likes',
+            dataType: 'json',
+            type: 'POST',
+            data: {"photo_id": photoId},
+            success: function(data) {
+                console.log("put likes count success")
+            }.bind(this),
+            error: function (xhr, status, err) {
+                console.error(photoId, status, err.toString());
+            }.bind(this)
+        });
+    },
     render: function () {
+        var clickHandler = this.onPraiseHeartClick.bind(this, this.props.photo_id);
         return (
-            <a target="_blank" href={'/samer/' + this.props.author_uid}>
-                <img className="lazy" data-original={this.props.photo_url} src={this.props.photo_url}
-                     style={{weight:"512", height:"256"}}/>
-            </a>
+            <li className="li-photo box">
+                 <span className="praise-heart">
+                     <a href="#" onClick={clickHandler}>
+                         <img style={{weight:"24", height:"24"}} src="/static/image/heart-icon.png" />
+                     </a>
+                 </span>
+                <div>
+                    <a target="_blank" href={'/samer/' + this.props.author_uid}>
+                    </a>
+                    <img className="lazy" data-original={this.props.photo_url} src={this.props.photo_url}
+                         style={{weight:"512", height:"256"}}/>
+                 </div>
+            </li>
         );
     }
 });
@@ -86,13 +110,13 @@ var PicList = React.createClass({
                 );
             } else {
                 return (
-                    <Pic author_uid={picData.author_uid} photo_url={picData.photo} key={picData.id}>
+                    <Pic author_uid={picData.author_uid} photo_url={picData.photo} photo_id={picData.id} key={picData.id}>
                     </Pic>
                 );
             }
         });
         return (
-            <div className="PicList">
+            <div className="PicList wrap">
                 {PicNode}
             </div>
         );

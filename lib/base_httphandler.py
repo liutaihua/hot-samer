@@ -62,6 +62,19 @@ class BaseHandler(tornado.web.RequestHandler):
             content_type=response.headers.get("Content-Type", None))
         raise gen.Return()
 
+    @gen.coroutine
+    def update_likes(self, photo_id):
+        previous_doc = yield self.query_from_es('SELECT * FROM same/user_ugc WHERE id=%s'%photo_id)
+        if not previous_doc:
+            raise gen.Return(False)
+        doc = previous_doc[0]
+        if '_score' in doc:
+            del doc['_score']
+        doc['likes'] +=1
+        print doc
+        es.update(index='same',doc_type='user_ugc',id=photo_id,
+                body={"doc": doc})
+        raise gen.Return(True)
 
     @gen.coroutine
     def query_from_es(self, sql):
