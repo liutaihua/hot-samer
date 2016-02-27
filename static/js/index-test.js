@@ -14,7 +14,7 @@ var LoadingComponent = React.createClass({
 var Pic = React.createClass({
     onPraiseHeartClick: function(photoId) {
         $.ajax({
-            url: 'http://localhost:8080/photo/'+photoId+'/likes',
+            url: '/photo/'+photoId+'/likes',
             dataType: 'json',
             type: 'POST',
             data: {"photo_id": photoId},
