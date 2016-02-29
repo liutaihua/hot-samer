@@ -90,6 +90,18 @@ li {
 . rbox-supple border-top: 1 px solid #f98;
 }
 
+.pic-nav-name {
+    color: #45b;
+    font-size: 14px;
+    margin: 0.8em 0 0;
+    margin-top: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 100px;
+    letter-spacing: 1px;
+. rbox-supple border-top: 1 px solid #f98;
+}
+
 .pic {
     margin: 0.6em auto;
     text-align: left;

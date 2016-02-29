@@ -91,12 +91,7 @@ var PicBox = React.createClass({
     },
     render: function () {
         return (
-            <div className="PicBox">
-                <div className="title"><h1>hot-samer</h1></div>
-                <h5>将自动获取最新热图</h5>
-                <div id="loading-div"></div>
-                <PicList data={this.state.data}/>
-            </div>
+            <PicList data={this.state.data}/>
         );
     }
 });
@@ -135,6 +130,14 @@ var Nav = React.createClass({
     }
 });
 
+var PicNav = React.createClass({
+    render: function () {
+        return (
+            <a className="pic-nav-name" onClick={this.props.onClick} href={this.props.href_uri}>{this.props.PicNavName}</a>
+        );
+    }
+});
+
 var NavBox = React.createClass({
     handleClick: function(restApi){
         var picBox = this.refs.PicBox;
@@ -152,17 +155,21 @@ var NavBox = React.createClass({
         const thisSelf = this;  //
         var NavNode = this.props.items.map(function (m) {
             var boundClick = thisSelf.handleClick.bind(this, m.href);
-            var exclude_ajax = ["/lab", "/search", "/music", "/hottest-rank"];
+            var exclude_ajax = ["/", "/lab", "/search", "/music", "/hottest-rank"];
             if (exclude_ajax.indexOf(m.href) > -1) {
                 return (
                     <Nav href_uri={m.href} nav_name={m.nav_name} key={m.id}>
                     </Nav>
                 );
-            } else {
-                return (
-                    <Nav href_uri={"#"} nav_name={m.nav_name} key={m.id} onClick={boundClick}>
-                    </Nav>
-                );
+            }
+        });
+
+        var PicNavNode = this.props.items.map(function (m) {
+            var boundClick = thisSelf.handleClick.bind(this, m.href);
+            var pic_nav_names = ["最新", "最热", "自画", "摄影", "其他"];
+            if (pic_nav_names.indexOf(m.nav_name) > -1) {
+                return (<PicNav href_uri="#"  PicNavName={m.nav_name} key={m.id} onClick={boundClick}>
+                </PicNav>);
             }
         });
         return (
@@ -176,14 +183,21 @@ var NavBox = React.createClass({
                     </ul>
                 </div>
             </div>
-            <PicBox url="/hot-samer?offset=0&limit=200" pollInterval={20000} ref="PicBox">
-            </PicBox>
+            <div className="PicBox">
+                <div className="title"><h1>hot-samer</h1></div>
+                <div>
+                    {PicNavNode}
+                </div>
+                <div id="loading-div"></div>
+                <PicBox url="/hot-samer?offset=0&limit=200" pollInterval={20000} ref="PicBox"> </PicBox>
+            </div>
             </div>
         );
     }
 });
 
 var data = [
+    {href: "/", nav_name: "热图", id: 0},
     {href: "/hot-samer?offset=0&limit=500", nav_name: "最新", id: 1},
     {href: "/hot-samer?by_likes=1&offset=0&limit=500", nav_name: "最热", id: 2},
     {href: "/hot-samer?offset=0&limit=500&hot_level=1", nav_name: "自画", id: 3},
