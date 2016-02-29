@@ -32,14 +32,14 @@ var Pic = React.createClass({
             <li className="li-photo box">
                  <span className="praise-heart">
                      <a href="#" onClick={clickHandler}>
-                         <img style={{weight:"24", height:"24"}} src="/static/image/heart-icon.png" />
+                         <img style={{weight:"16", height:"16"}} src="/static/image/heart-icon.png" />
                      </a>
                  </span>
                 <div>
                     <a target="_blank" href={'/samer/' + this.props.author_uid}>
-                    </a>
                     <img className="lazy" data-original={this.props.photo_url} src={this.props.photo_url}
                          style={{weight:"512", height:"256"}}/>
+                    </a>
                  </div>
             </li>
         );
