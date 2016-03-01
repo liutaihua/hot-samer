@@ -289,11 +289,11 @@ class LikesHandler(BaseHandler):
         self.finish(json.dumps({'code': 0, 'res': is_succeed}))
         raise gen.Return()
 
-class TumBlrHandler(BaseHandler):
+class TumblrHandler(BaseHandler):
     @gen.coroutine
     def get(self):
         pic_list = []
-        tumblr_resp = self.query_from_es('SELECT * FROM tumblr/pic ORDER BY timestamp DESC LIMIT 500')
+        tumblr_resp = yield self.query_from_es('SELECT * FROM tumblr/pic ORDER BY timestamp DESC LIMIT 500')
         if tumblr_resp:
             for idx, pic in enumerate(tumblr_resp):
                 pic_list.append({
@@ -321,6 +321,7 @@ handlers = [
     (r"/letter/(\d+)/(.*)", LetterResultIndex),
     (r"/letter/(\d+)", LetterHandler),
     (r"/lab", TestIndex),
+    (r"/tumblr", TumblrHandler),
     (r"/photo/(\d+)/likes", LikesHandler),
     (r'/favicon.ico', tornado.web.StaticFileHandler, dict(url='/static/favicon.ico', permanent=False)),
 ]
