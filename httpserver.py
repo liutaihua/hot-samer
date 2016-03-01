@@ -289,6 +289,24 @@ class LikesHandler(BaseHandler):
         self.finish(json.dumps({'code': 0, 'res': is_succeed}))
         raise gen.Return()
 
+class TumBlrHandler(BaseHandler):
+    @gen.coroutine
+    def get(self):
+        pic_list = []
+        tumblr_resp = self.query_from_es('SELECT * FROM tumblr/pic ORDER BY timestamp DESC LIMIT 500')
+        if tumblr_resp:
+            for idx, pic in enumerate(tumblr_resp):
+                pic_list.append({
+                    'views': 0,
+                    'photo': pic['photo'],
+                    'author_name': 'N/A',
+                    'author_uid': 0,
+                    'likes': 99,
+                    'id': idx
+                })
+        self.finish(json.dumps(pic_list))
+        raise gen.Return()
+
 handlers = [
     (r"/", MainHandler),
     (r"/senses", SortSensesHandler),

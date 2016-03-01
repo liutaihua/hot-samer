@@ -166,7 +166,7 @@ var NavBox = React.createClass({
 
         var PicNavNode = this.props.items.map(function (m) {
             var boundClick = thisSelf.handleClick.bind(this, m.href);
-            var pic_nav_names = ["最新", "最热", "自画", "摄影", "其他"];
+            var pic_nav_names = ["最新", "最热", "自画", "摄影", "其他", "未成年"];
             if (pic_nav_names.indexOf(m.nav_name) > -1) {
                 return (<PicNav href_uri="#"  PicNavName={m.nav_name} key={m.id} onClick={boundClick}>
                 </PicNav>);
@@ -207,7 +207,7 @@ var data = [
     {href: "/music", nav_name: "在听", id: 7},
     {href: "/search", nav_name: "寻人", id: 8},
     {href: "/lab", nav_name: "实验室", id: 9},
-
+    {href: "/tumblr", nav_name: "未成年", id: 10},
 ];
 ReactDOM.render(< NavBox items={ data }
     />,
