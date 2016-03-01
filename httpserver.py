@@ -293,7 +293,7 @@ class TumblrHandler(BaseHandler):
     @gen.coroutine
     def get(self):
         pic_list = []
-        tumblr_resp = yield self.query_from_es('SELECT * FROM tumblr/pic ORDER BY timestamp DESC LIMIT 500')
+        tumblr_resp = yield self.query_from_es('SELECT * FROM tumblr/pic ORDER BY timestamp DESC LIMIT 200')
         if tumblr_resp:
             for idx, pic in enumerate(tumblr_resp):
                 pic_list.append({
