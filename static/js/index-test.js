@@ -171,7 +171,15 @@ var NavBox = React.createClass({
         var PicNavNode = this.props.items.map(function (m) {
             var boundClick = thisSelf.handleClick.bind(this, m.href);
             var pic_nav_names = ["最新", "最热", "自画", "摄影", "其他", "未成年(慎入)"];
-            if (pic_nav_names.indexOf(m.nav_name) > -1) {
+            var rightNow = new Date();
+            if (m.nav_name == "未成年(慎入)") {
+                // 内容太残暴了, 白天就不显示NC-17的图了
+                if (rightNow.getHours() > 23 || rightNow.getHours() < 7) {
+                    return (<PicNav href_uri="#"  PicNavName={m.nav_name} key={m.id} onClick={boundClick}>
+                    </PicNav>);
+                }
+
+            } else if (pic_nav_names.indexOf(m.nav_name) > -1) {
                 return (<PicNav href_uri="#"  PicNavName={m.nav_name} key={m.id} onClick={boundClick}>
                 </PicNav>);
             }
