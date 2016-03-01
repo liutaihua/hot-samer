@@ -299,7 +299,7 @@ class TumblrHandler(BaseHandler):
                 pic_list.append({
                     'views': 0,
                     'photo': pic['photo'],
-                    'author_name': 'N/A',
+                    'author_name': pic.get('author_name') or 'N/A',
                     'author_uid': 0,
                     'likes': 99,
                     'id': idx
