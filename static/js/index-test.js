@@ -110,8 +110,12 @@ var PicList = React.createClass({
                 );
             }
         });
+        var rightNow = new Date();
+        rightNow.setHours(rightNow.getHours()+8);
+        var current_date = rightNow.toISOString();
         return (
             <div className="PicList wrap">
+                <div><p className="show-last-loading-time">更新于(自动更新): {current_date}</p></div>
                 {PicNode}
             </div>
         );

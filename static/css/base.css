@@ -124,6 +124,21 @@ border-radius(2 px)
     text-align: left;
 }
 
+.show-last-loading-time {
+    letter-spacing: 1px;
+    line-height: 1px;
+    padding: 0;
+    margin: 0;
+    margin-left: 5px;
+    margin-top: 25px;
+    margin-bottom: -20px;
+    font-size: 1px;
+    /*font-weight: 10px;*/
+    color: #b3b3b3;
+    height: 2.4em;
+    text-align: left;
+}
+
 .p-tags-center {
     letter-spacing: 1px;
     line-height: 1px;
