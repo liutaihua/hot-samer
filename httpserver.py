@@ -39,6 +39,10 @@ class MainHandler(tornado.web.RequestHandler):
         #     return self.render('index-test.html')
         return self.render('index-test.html')
 
+class NotFoundPage(BaseHandler):
+    def get(self):
+        return self.finish("美女全跑光了, 没找到任何东西...")
+
 
 class SortSensesHandler(tornado.web.RequestHandler):
     def get(self):
@@ -323,6 +327,7 @@ handlers = [
     (r"/lab", TestIndex),
     (r"/tumblr", TumblrHandler),
     (r"/photo/(\d+)/likes", LikesHandler),
+    (r"/404", NotFoundPage),
     (r'/favicon.ico', tornado.web.StaticFileHandler, dict(url='/static/favicon.ico', permanent=False)),
 ]
 

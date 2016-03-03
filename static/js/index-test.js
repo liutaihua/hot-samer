@@ -177,6 +177,9 @@ var NavBox = React.createClass({
                 if (rightNow.getHours() > 23 || rightNow.getHours() < 7) {
                     return (<PicNav href_uri="#"  PicNavName={m.nav_name} key={m.id} onClick={boundClick}>
                     </PicNav>);
+                } else {
+                    return (<PicNav href_uri="/404"  PicNavName="未成年(仅夜晚开放)" key={m.id} onClick={boundClick}>
+                    </PicNav>);
                 }
 
             } else if (pic_nav_names.indexOf(m.nav_name) > -1) {
