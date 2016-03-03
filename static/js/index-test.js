@@ -174,7 +174,7 @@ var NavBox = React.createClass({
             var rightNow = new Date();
             if (m.nav_name == "未成年(慎入)") {
                 // 内容太残暴了, 白天就不显示NC-17的图了
-                if (rightNow.getHours() > 23 || rightNow.getHours() < 7) {
+                if (rightNow.getHours() >= 23 || rightNow.getHours() < 7) {
                     return (<PicNav href_uri="#"  PicNavName={m.nav_name} key={m.id} onClick={boundClick}>
                     </PicNav>);
                 } else {
