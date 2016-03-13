@@ -41,7 +41,7 @@ class MainHandler(tornado.web.RequestHandler):
 
 class NotFoundPage(BaseHandler):
     def get(self):
-        return self.finish("美女全跑光了, 没找到任何东西...")
+        return self.finish("美女全跑光了(此频道20点后开放), 没找到任何东西...")
 
 
 class SortSensesHandler(tornado.web.RequestHandler):

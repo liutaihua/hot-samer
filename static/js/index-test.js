@@ -222,7 +222,7 @@ var data = [
     {href: "/music", nav_name: "在听", id: 7},
     {href: "/search", nav_name: "寻人", id: 8},
     {href: "/lab", nav_name: "实验室", id: 9},
-    {href: "/tumblr", nav_name: "未成年(慎入)", id: 10},
+    {href: "/tumblr", nav_name: "Tumblr(大尺度)", id: 10},
 ];
 ReactDOM.render(< NavBox items={ data }
     />,
