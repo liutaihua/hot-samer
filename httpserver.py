@@ -89,7 +89,7 @@ class HotSamerHandler(BaseHandler):
         if not resp:
             self.write(json.dumps([]))
             self.finish()
-            raise gen.Return
+            raise gen.Return()
         resp = json.loads(resp.body)
         self.set_header('Access-Control-Allow-Origin', '*')
         photo_list = []
