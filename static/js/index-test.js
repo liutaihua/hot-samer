@@ -159,7 +159,7 @@ var NavBox = React.createClass({
         const thisSelf = this;  //
         var NavNode = this.props.items.map(function (m) {
             var boundClick = thisSelf.handleClick.bind(this, m.href);
-            var exclude_ajax = ["/", "/lab", "/search", "/music", "/hottest-rank"];
+            var exclude_ajax = ["/", "https://github.com/liutaihua/hot-samer", "/search", "/music", "/hottest-rank"];
             if (exclude_ajax.indexOf(m.href) > -1) {
                 return (
                     <Nav href_uri={m.href} nav_name={m.nav_name} key={m.id}>
