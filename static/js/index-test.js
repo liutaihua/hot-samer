@@ -170,7 +170,7 @@ var NavBox = React.createClass({
 
         var PicNavNode = this.props.items.map(function (m) {
             var boundClick = thisSelf.handleClick.bind(this, m.href);
-            var pic_nav_names = ["最新", "最热", "自画", "摄影", "其他", "未成年(慎入)"];
+            var pic_nav_names = ["最新", "最热", "自画", "摄影", "其他", "Tumblr"];
             var rightNow = new Date();
             if (m.nav_name == "Tumblr(大尺度)") {
                 // 内容太残暴了, 白天就不显示NC-17的图了
@@ -178,7 +178,7 @@ var NavBox = React.createClass({
                     return (<PicNav href_uri="#"  PicNavName={m.nav_name} key={m.id} onClick={boundClick}>
                     </PicNav>);
                 } else {
-                    return (<PicNav href_uri="/404"  PicNavName="未成年(仅夜晚开放)" key={m.id} onClick={boundClick}>
+                    return (<PicNav href_uri="/404"  PicNavName="Tumblr" key={m.id} onClick={boundClick}>
                     </PicNav>);
                 }
 
