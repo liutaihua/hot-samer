@@ -12,7 +12,12 @@ hot-samer
 
 ###
 前端用的ReactJS  
-后端是Tornado
+后端是Tornado 
+
+###
+前端是非整体刷新，用局部加载，热图频道默认定时20秒获取新图片  
+用elasticSearch搜索全文  
+
 
 需要自己部署玩的话: requirements 文件是我的pip freeze， 比较懒就没有仔细过滤了 使用 pip install -r requirements 自动安装就可以了
 
