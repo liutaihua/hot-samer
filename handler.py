@@ -297,7 +297,7 @@ class TumblrHandler(BaseHandler):
 class PopularChannels(BaseHandler):
     @gen.coroutine
     def get(self):
-        filter_date = datetime.datetime.now() - datetime.timedelta(days=700)
+        filter_date = datetime.datetime.now() - datetime.timedelta(days=1)
         sql = 'SELECT DISTINCT channel_id, created_at, timestamp FROM same/user_ugc ' \
                                             'WHERE timestamp>"%s" ORDER BY timestamp' % filter_date.isoformat()
         channels_data = yield self.query_from_es(sql)

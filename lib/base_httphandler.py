@@ -185,7 +185,7 @@ class BaseHandler(tornado.web.RequestHandler):
         channel_info = yield self.query_from_es(sql)
         if not channel_info:
             channel_info = yield self.get_from_same(fetch_url)
-            yield self.save_to_es(index='same', table='channels', uuid=channel_info['id'], data=channel_info)
+            yield self.save_to_es(index='same', table='channels', uuid=str(channel_info['id']), data=channel_info)
             raise gen.Return(channel_info)
         raise gen.Return(channel_info[0])
 
