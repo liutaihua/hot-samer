@@ -159,7 +159,7 @@ var NavBox = React.createClass({
         const thisSelf = this;  //
         var NavNode = this.props.items.map(function (m) {
             var boundClick = thisSelf.handleClick.bind(this, m.href);
-            var exclude_ajax = ["/", "https://github.com/liutaihua/hot-samer", "/search", "/music", "/hottest-rank"];
+            var exclude_ajax = ["/", "https://github.com/liutaihua/hot-samer", "/search", "/music", "/samer-star"];
             if (exclude_ajax.indexOf(m.href) > -1) {
                 return (
                     <Nav href_uri={m.href} nav_name={m.nav_name} key={m.id}>
@@ -218,7 +218,7 @@ var data = [
     {href: "/hot-samer?offset=0&limit=500&hot_level=1", nav_name: "自画", id: 3},
     {href: "/hot-samer?offset=0&limit=500&hot_level=2", nav_name: "摄影", id: 4},
     {href: "/hot-samer?offset=0&limit=500&hot_level=3", nav_name: "其他", id: 5},
-    {href: "/hottest-rank", nav_name: "红人", id: 6},
+    {href: "/samer-star", nav_name: "红人", id: 6},
     {href: "/music", nav_name: "在听", id: 7},
     {href: "/search", nav_name: "寻人", id: 8},
     //{href: "/lab", nav_name: "实验室", id: 9},

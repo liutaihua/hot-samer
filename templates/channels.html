@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block head %}
+    <title>Hot-Samer 推荐频道</title>
+{% end %}
+
+{% block body %}
+    <div>
+        <div>
+            {% for idx, (cid, channel) in enumerate(channels_list) %}
+            <li class="p-li">
+                <div style="background: #93d6ef;" class="top-n">{{ idx + 1 }}</div>
+                    <a href="/channel/{{ cid }}" target="_blank" title="">
+                    <div class="pic left">
+                        <img class="img-circle" src="{{ channel['icon'] }}" width=128 height=128 alt="Ballade"/>
+                        <p class="p-tags" >名字: {{ channel['name'] }}</p>
+                        <p class="p-tags" >概述: {{ channel['description'] }}</p>
+                        <p class="p-tags">条目数: {{ channel['ugc_count'] }}</p>
+                        <p class="p-tags">最后更新: {{ channel['updated_at'] }}</p>
+                        <p class="p-tags">创建于: {{ channel['created_at'] }}</p>
+                    </div>
+                    </a></li>
+            {% end %}
+
+        </div>
+    </div>
+{% end %}
+

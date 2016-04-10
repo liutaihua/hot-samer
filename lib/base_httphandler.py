@@ -78,6 +78,7 @@ class BaseHandler(tornado.web.RequestHandler):
 
     @gen.coroutine
     def query_from_es(self, sql):
+        print sql
         sql = urllib2.quote(sql)
         fetch_url = 'http://localhost:9200/_sql?sql=%s' % sql
         response = yield self.fetch_url(fetch_url)
@@ -112,7 +113,7 @@ class BaseHandler(tornado.web.RequestHandler):
         # profile_list = [i['_source'] for i in json.loads(resp.body)['hits']['hits']]
         data = {}
         if not skip_silence_user:
-            # hottest-rank外的请求, 没取到的uid profile数据需要再次尝试从same api获取一次
+            # samer-star外的请求, 没取到的uid profile数据需要再次尝试从same api获取一次
             in_es_uids = [i['id'] for i in profile_list]
             not_in_es_uids = list(set(map(int, uids)) - set(map(int, in_es_uids)))
             for uid in not_in_es_uids:
@@ -167,6 +168,26 @@ class BaseHandler(tornado.web.RequestHandler):
             yield self.save_single_profile(profile)
             profile['join_at'] = datetime.datetime.fromtimestamp(int(profile['join_at'])).strftime('%Y-%m-%d %H:%M:%S')
         raise gen.Return(profile)
+
+    @gen.coroutine
+    def get_from_same(self, fetch_url):
+        data = {'code': 500, 'data': {}}
+        resp = yield self.fetch_url(fetch_url)
+        if resp:
+            if resp.code == 200:
+                data = json.loads(resp.body)
+        raise gen.Return(data['data'])
+
+    @gen.coroutine
+    def get_channel_info(self, cid):
+        fetch_url = 'https://v2.same.com/channel/%s/detail' % cid
+        sql = 'SELECT * FROM same/channels WHERE id=%s' % cid
+        channel_info = yield self.query_from_es(sql)
+        if not channel_info:
+            channel_info = yield self.get_from_same(fetch_url)
+            yield self.save_to_es(index='same', table='channels', uuid=channel_info['id'], data=channel_info)
+            raise gen.Return(channel_info)
+        raise gen.Return(channel_info[0])
 
 
     @gen.coroutine
