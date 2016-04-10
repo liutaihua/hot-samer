@@ -299,9 +299,11 @@ class PopularChannelsHandler(BaseHandler):
     def get(self):
         filter_date = datetime.datetime.now() - datetime.timedelta(days=1)
         sql = 'SELECT DISTINCT channel_id, created_at, timestamp FROM same/user_ugc ' \
-                                            'WHERE timestamp>"%s" ORDER BY timestamp' % filter_date.isoformat()
+                                            'WHERE timestamp>"%s" ORDER BY timestamp LIMIT 10000' % filter_date.isoformat()
+        print sql
         channels_data = yield self.query_from_es(sql)
         channels_dict = {}
+        print channels_data
         for i in channels_data:
             channel_id = i['channel_id']
             channels_dict.setdefault(channel_id, {'ugc_count': 0})
