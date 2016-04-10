@@ -322,8 +322,9 @@ class ChannelSensesHandler(BaseHandler):
     def get(self, cid):
         sql = 'SELECT * FROM same/user_ugc WHERE channel_id=%s' % cid
         results_list = yield self.query_from_es(sql)
+        channel_name = yield self.query_from_es('SELECT name FROM same/channels WHERE id=%s' % cid)
         # self.finish(json.dumps(results_list))
         for i in results_list:
-            results_list['created_at'] = datetime.datetime.fromtimestamp(int(i['created_at']))
-        self.render('channel.html', ugc_list=results_list)
+            i['created_at'] = datetime.datetime.fromtimestamp(int(i['created_at']))
+        self.render('channel.html', ugc_list=results_list, channel_name=channel_name[0]['name'])
         raise gen.Return()
