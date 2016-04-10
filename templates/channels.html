@@ -9,7 +9,7 @@
             {% for idx, (cid, channel) in enumerate(channels_list) %}
             <li class="p-li">
                 <div style="background: #93d6ef;" class="top-n">{{ idx + 1 }}</div>
-                    <a href="/channel/{{ cid }}" target="_blank" title="">
+                    <a href="/channel/{{ cid }}/senses" target="_blank" title="">
                     <div class="pic left">
                         <img class="img-circle" src="{{ channel['icon'] }}" width=128 height=128 alt="Ballade"/>
                         <p class="p-tags" >名字: {{ channel['name'] }}</p>

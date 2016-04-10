@@ -48,7 +48,7 @@ handlers = [
     (r"/photo/(\d+)/likes", LikesHandler),
     (r"/404", NotFoundPage),
     (r"/channels", PopularChannelsHandler),
-    (r"/channel/(\d+)", ChannelSensesHandler),
+    (r"/channel/(\d+)/senses", ChannelSensesHandler),
     (r'/favicon.ico', tornado.web.StaticFileHandler, dict(url='/static/favicon.ico', permanent=False)),
 ]
 
