@@ -1,0 +1,41 @@
+﻿{% extends "base.html" %}
+{% block head %}
+<title>Hot-Samer 用户信息</title>
+{% end %}
+
+{% block body %}
+    <div>
+        <h4 id="loading-bubble-news">正在载入频道信息...</h4>
+        <div class="little_title"><h4>频道动态</h4></div>
+        <div class="title">
+            {% if not ugc_list %}
+            <p>Same 服务器忙</p>
+            {% else %}
+            {% for new in ugc_list %}
+                <div class="title">
+
+                {% if 'photo' in new %}
+                <a href="{{ new['photo'] }}"><img src="{{ new['photo'] }}" weight=512 height=256/></a>
+                {% else %}
+                    {% continue %}
+                {% end %}
+
+                    {% if 'txt' in new %}
+                    <p class="p-tags-center">{{ new['txt'] }}</p>
+                    {% end %}
+
+                    {% if new['likes'] > 0 %}
+                    <p class="p-tags-center">likes: {{ new['likes'] }}</p>
+                    {% end %}
+
+                    <p class="p-tags-center">{{ new['created_at'] }}</p>
+                </div>
+            </div>
+            {% end %}
+            {% end %}
+            <script type="text/javascript">
+                document.getElementById("loading-bubble-news").remove();
+            </script>
+        </div>
+    </div>
+{% end %}

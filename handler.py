@@ -294,7 +294,7 @@ class TumblrHandler(BaseHandler):
         self.finish(json.dumps(pic_list))
         raise gen.Return()
 
-class PopularChannels(BaseHandler):
+class PopularChannelsHandler(BaseHandler):
     @gen.coroutine
     def get(self):
         filter_date = datetime.datetime.now() - datetime.timedelta(days=1)
@@ -315,4 +315,13 @@ class PopularChannels(BaseHandler):
         channels_list = sorted(channels_dict.items(), key=lambda x:x[1]['ugc_count'], reverse=True)
         # self.finish(json.dumps(channels_list))
         self.render('channels.html', channels_list=channels_list)
+        raise gen.Return()
+
+class ChannelSensesHandler(BaseHandler):
+    @gen.coroutine
+    def get(self, cid):
+        sql = 'SELECT * FROM same/user_ugc WHERE channel_id=%s' % cid
+        results_list = yield self.query_from_es(sql)
+        # self.finish(json.dumps(results_list))
+        self.render('channel.html', ugc_list=results_list)
         raise gen.Return()

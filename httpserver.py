@@ -27,7 +27,8 @@ from tornado.ioloop import IOLoop
 from handler import (MainHandler, SortSensesHandler, HotSamerHandler, SamerProfileHandler,
                      FunIndex, PhotographyIndex, OthersIndex, SamerStarHandler,
                      SearchHandler, PopularMusicHandler, LetterResultIndex, LetterHandler,
-                     TestIndex, TumblrHandler, LikesHandler, NotFoundPage, PopularChannels)
+                     TestIndex, TumblrHandler, LikesHandler, NotFoundPage, PopularChannelsHandler,
+                     ChannelSensesHandler)
 
 handlers = [
     (r"/", MainHandler),
@@ -46,7 +47,8 @@ handlers = [
     (r"/tumblr", TumblrHandler),
     (r"/photo/(\d+)/likes", LikesHandler),
     (r"/404", NotFoundPage),
-    (r"/channels", PopularChannels),
+    (r"/channels", PopularChannelsHandler),
+    (r"/channel/(\d+)", ChannelSensesHandler),
     (r'/favicon.ico', tornado.web.StaticFileHandler, dict(url='/static/favicon.ico', permanent=False)),
 ]
 
