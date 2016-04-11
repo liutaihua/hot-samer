@@ -298,24 +298,16 @@ class PopularChannelsHandler(BaseHandler):
     @gen.coroutine
     def get(self):
         filter_date = datetime.datetime.now() - datetime.timedelta(days=1)
-        sql = 'SELECT DISTINCT channel_id, created_at, timestamp FROM same/user_ugc ' \
-                                            'WHERE timestamp>"%s" ORDER BY timestamp LIMIT 10000' % filter_date.isoformat()
-        print sql
-        channels_data = yield self.query_from_es(sql)
-        channels_dict = {}
-        print channels_data
-        for i in channels_data:
-            channel_id = i['channel_id']
-            channels_dict.setdefault(channel_id, {'ugc_count': 0})
-            channels_dict[channel_id]['ugc_count'] += 1
-        for cid, channel_info in channels_dict.items():
-            info = yield self.get_channel_info(cid)
-            info['created_at'] = datetime.datetime.fromtimestamp(int(info['created_at']))
-            info['updated_at'] = datetime.datetime.fromtimestamp(int(info['updated_at']))
-
-            channel_info.update(info)
-        channels_list = sorted(channels_dict.items(), key=lambda x:x[1]['ugc_count'], reverse=True)
-        # self.finish(json.dumps(channels_list))
+        sql = 'SELECT channel_id, COUNT(*) as ugc_count FROM same/user_ugc ' \
+                                            'WHERE timestamp>"%s" GROUP BY channel_id ORDER BY ugc_count DESC LIMIT 30' % filter_date.isoformat()
+        channels_data = yield self.query_from_es(sql, need_aggregations=True, aggregations_key='channel_id')
+        channels_list = []
+        for info in channels_data:
+            channel_info = yield self.get_channel_info(info['key'])
+            channel_info['created_at'] = datetime.datetime.fromtimestamp(int(channel_info['created_at']))
+            channel_info['updated_at'] = datetime.datetime.fromtimestamp(int(channel_info['updated_at']))
+            channel_info['ugc_count'] = info['ugc_count']['value']
+            channels_list.append((info['key'], channel_info))
         self.render('channels.html', channels_list=channels_list)
         raise gen.Return()
 

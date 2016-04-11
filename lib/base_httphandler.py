@@ -77,17 +77,20 @@ class BaseHandler(tornado.web.RequestHandler):
         raise gen.Return(True)
 
     @gen.coroutine
-    def query_from_es(self, sql):
+    def query_from_es(self, sql, need_aggregations=False, aggregations_key=None):
         print sql
         sql = urllib2.quote(sql)
         fetch_url = 'http://localhost:9200/_sql?sql=%s' % sql
         response = yield self.fetch_url(fetch_url)
         results = []
         if response:
-            for data in json.loads(response.body)['hits']['hits']:
-                res = data['_source']
-                res['_score'] = data['_score']
-                results.append(res)
+            if need_aggregations:
+                results = json.loads(response.body)['aggregations'][aggregations_key]['buckets']
+            else:
+                for data in json.loads(response.body)['hits']['hits']:
+                    res = data['_source']
+                    res['_score'] = data['_score']
+                    results.append(res)
         raise gen.Return(results)
 
     @gen.coroutine
