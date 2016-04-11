@@ -314,7 +314,7 @@ class PopularChannelsHandler(BaseHandler):
 class ChannelSensesHandler(BaseHandler):
     @gen.coroutine
     def get(self, cid):
-        sql = 'SELECT * FROM same/user_ugc WHERE channel_id=%s' % cid
+        sql = 'SELECT * FROM same/user_ugc WHERE channel_id=%s ORDER BY timestamp DESC limit 2000' % cid
         results_list = yield self.query_from_es(sql)
         channel_name = yield self.query_from_es('SELECT name FROM same/channels WHERE id=%s' % cid)
         # self.finish(json.dumps(results_list))
