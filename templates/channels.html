@@ -13,10 +13,10 @@
                     <div class="pic left">
                         <img class="img-circle" src="{{ channel['icon'] }}" width=128 height=128 alt="Ballade"/>
                         <p class="p-tags" >名字: {{ channel['name'] }}</p>
-                        <p class="p-tags" >概述: {{ channel['description'] }}</p>
-                        <p class="p-tags">条目数: {{ channel['ugc_count'] }}</p>
-                        <p class="p-tags">最后更新: {{ channel['updated_at'] }}</p>
-                        <p class="p-tags">创建于: {{ channel['created_at'] }}</p>
+                        <p class="p-text-overflow" >{{ channel['description'] }}</p>
+                        <p class="p-tags">又有新的内容: {{ channel['ugc_count'] }}</p>
+                        <p class="p-text-overflow">最后更新: {{ channel['updated_at'] }}</p>
+                        <p class="p-text-overflow">创建于: {{ channel['created_at'] }}</p>
                     </div>
                     </a></li>
             {% end %}
