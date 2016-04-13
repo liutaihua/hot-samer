@@ -38,7 +38,7 @@ var Pic = React.createClass({
                 <div>
                     <a target="_blank" href={'/samer/' + this.props.author_uid}>
                     <img className="lazy" data-original={this.props.photo_url} src={this.props.photo_url}
-                         style={{weight:"512", height:"256"}}/>
+                         style={{weight:"676", height:"320"}}/>
                     </a>
                  </div>
             </li>

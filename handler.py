@@ -320,5 +320,5 @@ class ChannelSensesHandler(BaseHandler):
         # self.finish(json.dumps(results_list))
         for i in results_list:
             i['created_at'] = datetime.datetime.fromtimestamp(int(i['created_at']))
-        self.render('channel.html', ugc_list=results_list, channel_name=channel_name[0]['name'])
+        self.render('channel_senses.html', ugc_list=results_list, channel_name=channel_name[0]['name'])
         raise gen.Return()
