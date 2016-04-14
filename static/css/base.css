@@ -167,6 +167,9 @@ border-radius(2 px)
     margin-top: 5px;
     margin-bottom: -10px;
     font-size: 13px;
+     text-overflow: ellipsis;
+     overflow: hidden;
+     white-space: nowrap;
     /*font-weight: 10;*/
     color: #b3b3b3;
     height: 2.4em;
