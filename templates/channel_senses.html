@@ -15,7 +15,7 @@
                 <div class="title">
 
                 {% if 'photo' in new %}
-                <a href="{{ new['photo'] }}"><img src="{{ new['photo'] }}" weight=576 height=320/></a>
+                <a href="/samer/{{ new['author_uid'] }}"><img src="{{ new['photo'] }}" weight=576 height=320/></a>
                 {% else %}
                     {% continue %}
                 {% end %}
