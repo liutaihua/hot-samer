@@ -28,7 +28,7 @@ from handler import (MainHandler, SortSensesHandler, HotSamerHandler, SamerProfi
                      FunIndex, PhotographyIndex, OthersIndex, SamerStarHandler,
                      SearchHandler, PopularMusicHandler, LetterResultIndex, LetterHandler,
                      TestIndex, TumblrHandler, LikesHandler, NotFoundPage, PopularChannelsHandler,
-                     ChannelSensesHandler)
+                     ChannelSensesHandler, BlogHandler)
 
 handlers = [
     (r"/", MainHandler),
@@ -50,6 +50,8 @@ handlers = [
     (r"/channels", PopularChannelsHandler),
     (r"/channel/(\d+)/senses", ChannelSensesHandler),
     (r'/favicon.ico', tornado.web.StaticFileHandler, dict(url='/static/favicon.ico', permanent=False)),
+
+    (r"/v1/(.*)", BlogHandler),
 ]
 
 settings = dict(

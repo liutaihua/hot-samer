@@ -38,8 +38,12 @@
             {% for new in latest_news %}
                 <div class="title">
 
-                {% if 'photo' in new %}
+                {% if new.get('photo', '') != ''  %}
                 <a href="{{ new['photo'] }}"><img src="{{ new['photo'] }}" weight=576 height=320/></a>
+                {% elif 'media' in new %}
+                    {% if 'music' in new['media'] %}
+                        <a href="{{ new['media']['music']['src'] }}"><img src="{{ new['media']['music']['cover'] }}" weight=256 height=256/></a>
+                    {% end %}
                 {% else %}
                     {% continue %}
                 {% end %}

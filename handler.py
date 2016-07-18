@@ -9,6 +9,7 @@ import os
 import datetime
 from tornado import gen
 import tornado.web
+import pylibmc as memcache
 from lib.base_httphandler import BaseHandler
 
 USER = pwd.getpwuid(os.getuid())[0]
@@ -18,10 +19,12 @@ if USER == 'liutaihua':
 else:
     from same_spider.secret import header
 
+mc = memcache.Client(['127.0.0.1:11211'])
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
         self.set_header('Access-Control-Allow-Origin', '*')
+        #return self.finish({'res': "衙门严打,临时停服"})
         return self.render('index-test.html')
 
 class NotFoundPage(BaseHandler):
@@ -123,6 +126,8 @@ class SamerProfileHandler(BaseHandler):
         if news_data['code'] == 0:
             for i in news_data['data']['results']:
                 i['created_at'] = datetime.datetime.fromtimestamp(int(i['created_at'])).strftime('%Y-%m-%d %H:%M:%S')
+                if 'likes' not in i:
+                    i['likes'] = 0
                 latest_news.append(i)
         self.render('user.html', profile=profile, latest_news=latest_news)
         raise gen.Return()
@@ -322,3 +327,33 @@ class ChannelSensesHandler(BaseHandler):
             i['created_at'] = datetime.datetime.fromtimestamp(int(i['created_at']))
         self.render('channel_senses.html', ugc_list=results_list, channel_name=channel_name[0]['name'])
         raise gen.Return()
+
+
+class BlogHandler(tornado.web.RequestHandler):
+    def get(self, action):
+        self.set_header('Access-Control-Allow-Origin', '*')
+        if action == 'like_count':
+            user = self.get_argument('user')
+            article_name = '-'.join(self.get_argument('name', '').split(' '))
+            count = mc.get('%s_liked_count'%article_name) or 0
+            liked = mc.get('%s_like_%s'%(user, article_name)) is not None or False
+            return self.finish({'liked': liked, 'count': count, 'user': user})
+
+    def post(self, action):
+        self.set_header('Access-Control-Allow-Origin', '*')
+        if action == 'like':
+            user = self.get_argument('user')
+            article_name = '-'.join(self.get_argument('name', '').split(' '))
+            key = '%s_liked_count'%article_name
+            if mc.get(key) is None:
+                mc.set(key, 0)
+            like_count = mc.incr(key)
+            return self.finish({'liked': True, 'count': like_count, 'user': user})
+        elif action == 'unlike':
+            user = self.get_argument('user')
+            article_name = '-'.join(self.get_argument('name', '').split(' '))
+            key = '%s_liked_count'%article_name
+            if mc.get(key) is None:
+                mc.set(key, 1)
+            like_count = mc.decr(key)
+            return self.finish({'liked': False, 'count': like_count, 'user': user})
