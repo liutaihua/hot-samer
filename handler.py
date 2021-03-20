@@ -176,7 +176,7 @@ class LetterHandler(BaseHandler):
                 # self.write('发生失败, 可能由于网络或Same服务器问题, 请手动返回')
                 # self.flush()
             elif json.loads(resp.body)['code'] == 0:
-                print resp.body
+                print(resp.body)
                 self.redirect('/letter/%s/success'%to_uid)
                 # self.write(json.dumps(resp.body))
                 # self.write('发生成功, 请手工返回')
@@ -202,7 +202,7 @@ class SamerStarHandler(BaseHandler):
         query_ugc_sql = 'SELECT * FROM same/user_ugc WHERE timestamp>"%s" AND ' \
                         'likes>5 ORDER BY timestamp DESC,likes DESC,views DESC LIMIT 1000 OFFSET 0' %\
                         (early_time.isoformat())
-        print query_ugc_sql
+        print(query_ugc_sql)
         ugc_list = yield self.query_from_es(query_ugc_sql)
         rank_data = {}
         for ugc in ugc_list:
@@ -270,7 +270,7 @@ class PopularMusicHandler(BaseHandler):
         sql = 'SELECT * FROM same/music where timestamp>"%s" AND likes>3 ' \
               'order by likes desc,views desc,timestamp desc LIMIT 200' %(filter_date.isoformat())
         music_list = yield self.query_from_es(sql)
-        print music_list
+        print(music_list)
         self.render('music_list.html', music_list=music_list)
         raise gen.Return()
 

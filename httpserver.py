@@ -7,7 +7,6 @@ import sys
 import pwd
 import time
 import requests
-import urllib2
 import copy
 import random
 import datetime
@@ -76,7 +75,7 @@ class Application(tornado.web.Application):
 
 def main(port):
     tornado.options.parse_command_line()
-    print "start on port %s..." % port
+    print("start on port %s..." % port)
     http_server = tornado.httpserver.HTTPServer(Application(), xheaders=True)
     http_server.listen(port)
     if platform.system() == 'Darwin':

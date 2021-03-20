@@ -34,15 +34,15 @@ def get_multi_rank_likes(cid, pages=3):
             res = requests.get(url, verify=False, headers=header)
             data = json.loads(res.text)
             results_list.extend(data.get('data', {}).get('results', []))
-        except Exception, e:
-            print 'parse err', e, url
+        except:
+            print('parse err', url)
         # gevent.sleep(random.randint(1,3))
     return results_list
 
 def collect_likes_rank_data(cid):
     bulk_list = []
     results_list = get_multi_rank_likes(cid)
-    print 'got data done, cid: %s, data len: %s' %(cid, len(results_list))
+    print('got data done, cid: %s, data len: %s' %(cid, len(results_list)))
     # gevent.sleep(random.randint(1,2))
     for ugc in results_list:
         if 'photo' not in ugc:
@@ -68,7 +68,7 @@ def collect_likes_rank_data(cid):
             }
         }
         bulk_list.append(action)
-    print 'collect rank data: ', helpers.bulk(es, bulk_list)
+    print('collect rank data: ', helpers.bulk(es, bulk_list))
 
 def collect_user_recent_ugc(uid):
     recent_ugc_list = get_user_recent_ugc_list(uid)
@@ -93,7 +93,7 @@ def collect_user_recent_ugc(uid):
         }
         bulk_list.append(action)
     if recent_ugc_list:
-        print 'collect ugc length {}, uid: {}'.format(helpers.bulk(es, bulk_list), uid)
+        print('collect ugc length {}, uid: {}'.format(helpers.bulk(es, bulk_list), uid))
     return len(recent_ugc_list)
 
 def collect_profile_data(uid):
@@ -102,7 +102,7 @@ def collect_profile_data(uid):
     profile = get_user_profile(uid)
     # gevent.sleep(0.1)
     if not profile or not profile.get('user'):
-        print 'not profile data', uid
+        print('not profile data', uid)
         return
     # recent_ugc_times = collect_user_recent_ugc(uid)
     # gevent.sleep(0.1)
@@ -152,7 +152,7 @@ def collect_profile_data_multi(uids):
         #     print 'collect profile count:', helpers.bulk(es, bulk_list)
         #     bulk_list = []
     if bulk_list:
-        print 'had collect profile count:', helpers.bulk(es, bulk_list)
+        print('had collect profile count:', helpers.bulk(es, bulk_list))
 
 
 def insert_ugc_into_es(result_list):
@@ -177,7 +177,7 @@ def insert_ugc_into_es(result_list):
             }
         }
         bulk_list.append(action)
-    print 'collect to es data length {}'.format(helpers.bulk(es, bulk_list))
+    print('collect to es data length {}'.format(helpers.bulk(es, bulk_list)))
 
 
 def collect_single_channel_data(cid, max_expire=3600):
@@ -185,7 +185,7 @@ def collect_single_channel_data(cid, max_expire=3600):
     result_list, next_uri = get_photo_url_with_channel_id(cid)
     recent_ugc_list.extend(result_list)
     while len(result_list) > 0 and next_uri:
-        print 'next uri:', next_uri
+        print('next uri:', next_uri)
         result_list, next_uri = get_photo_url_with_channel_id(cid, next_uri=next_uri)
         if result_list:
             if time.time() - int(float(result_list[-1]['created_at'])) > max_expire:
@@ -205,7 +205,7 @@ def get_latest_channels(filter_cate_ids=None, max_expire=3600):
     #     result_list = [x for x in result_list if x['cate'] in filter_cate_ids or []]
     channel_info_list.extend(result_list)
     while len(result_list) > 0 and next_uri:
-        print 'next uri:', next_uri
+        print('next uri:', next_uri)
         result_list, next_uri = get_latest_channels_url(next_uri)
         if result_list:
             if time.time() - int(next_uri.split('=')[1][:10]) > max_expire:
@@ -228,8 +228,8 @@ def get_latest_channels_url(next_uri=None):
         if not result:
             return [], None
         return result, data['data']['next']
-    except Exception, e:
-        print 'get_latest_channels_url err', e, url
+    except :
+        print('get_latest_channels_url err', url)
         return [], None
 
 def get_music_channels():
@@ -238,8 +238,8 @@ def get_music_channels():
         res = requests.get(url, headers=header)
         if res.status_code == 200:
             return json.loads(res.text)['data']['results']
-    except Exception, e:
-        print 'get_music_channels err:', url, e
+    except :
+        print('get_music_channels err:', url, e)
         return []
 
 def get_popular_music_list_with_cid(cid, days=7, page=3):
@@ -254,8 +254,8 @@ def get_popular_music_list_with_cid(cid, days=7, page=3):
             if res.status_code == 200:
                 data = json.loads(res.text)
                 results_list.extend(data['data']['results'])
-        except Exception, e:
-            print 'parse err', e, url
+        except :
+            print('parse err', e, url)
     return results_list
 
 def collect_popular_music_into_es():
@@ -287,7 +287,7 @@ def collect_popular_music_into_es():
                 'music_cover': music['media']['music']['cover'],
             }
             })
-        print 'collect music:', helpers.bulk(es, bulk_list)
+        print('collect music:', helpers.bulk(es, bulk_list))
 
 
 
@@ -299,7 +299,7 @@ if __name__ == "__main__":
             channels_ids.extend(get_channels_ids_with_cate_id(2, offset=page))
             time.sleep(1)
 
-        print channels_ids
+        print(channels_ids)
         for cid in list(set(channels_ids)):
             collect_likes_rank_data(cid)
             # gs.append(gevent.spawn(collect_likes_rank_data, cid))
@@ -335,7 +335,7 @@ if __name__ == "__main__":
         while init_uid < 4510000:
             gs.append(gevent.spawn(collect_profile_data_multi, range(init_uid, init_uid+offset)))
             init_uid += offset
-        print 'start gevent done, count:%d'%len(gs)
+        print('start gevent done, count:%d'%len(gs))
         gevent.joinall(gs)
 
     elif sys.argv[1] == 'get_music':

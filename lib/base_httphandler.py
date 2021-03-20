@@ -6,11 +6,11 @@ import tornado.httpclient
 import os
 import re
 import json
-import urllib2
 import datetime
 
 
-from urlparse import urljoin
+import urllib
+from urllib.parse import urljoin
 from tornado.options import options
 from tornado.httpclient import HTTPError
 from tornado import gen
@@ -21,7 +21,7 @@ from tornado.log import app_log
 from lib.httputil \
     import (set_response_info, wrap_response_body, fetch_and_trace_response, get_request_time)
 
-import session
+import lib.session
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
 import pwd
@@ -40,7 +40,7 @@ es = Elasticsearch()
 class BaseHandler(tornado.web.RequestHandler):
     @property
     def db(self):
-        print self.application.db
+        print(self.application.db)
         return self.application.db
 
     def __init__(self, *argc, **argkw):
@@ -71,15 +71,15 @@ class BaseHandler(tornado.web.RequestHandler):
         if '_score' in doc:
             del doc['_score']
         doc['likes'] +=1
-        print doc
+        print(doc)
         es.update(index='same',doc_type='user_ugc',id=photo_id,
                 body={"doc": doc})
         raise gen.Return(True)
 
     @gen.coroutine
     def query_from_es(self, sql, need_aggregations=False, aggregations_key=None):
-        print sql
-        sql = urllib2.quote(sql)
+        print(sql)
+        sql = urllib.request.quote(sql)
         fetch_url = 'http://localhost:9200/_sql?sql=%s' % sql
         response = yield self.fetch_url(fetch_url)
         results = []
@@ -99,7 +99,7 @@ class BaseHandler(tornado.web.RequestHandler):
         query_ugc_sql = 'SELECT * FROM same/user_ugc WHERE timestamp>"%s" AND ' \
                         'likes>3 ORDER BY timestamp DESC LIMIT 2000 OFFSET 0' %\
                         (early_time.isoformat())
-        print query_ugc_sql
+        print(query_ugc_sql)
         resp = yield self.query_from_es(query_ugc_sql)
         gen.Return(resp)
 
@@ -207,7 +207,7 @@ class BaseHandler(tornado.web.RequestHandler):
             '_source': data
         }
         res = helpers.bulk(es, [es_data])  # 这里的库不支持异步,忍了
-        print 'save to es result:', res
+        print('save to es result:', res)
         raise gen.Return()
 
     @gen.coroutine

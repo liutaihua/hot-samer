@@ -1,30 +1,3 @@
-"""
-
-Usage:
-In your application script,
-    settings["session_secret"] = 'some secret password!!'
-    settings["session_dir"] = 'sessions'  # the directory to store sessions in
-    application.session_manager = session.TornadoSessionManager(settings["session_secret"], settings["session_dir"])
-
-In your RequestHandler (probably in __init__),
-    self.session = session.TornadoSession(self.application.session_manager, self)
-
-After that, you can use it like this (in get(), post(), etc):
-    self.session['blah'] = 1234
-    self.save()
-    blah = self.session['blah']
-
-    etc.
-
-
-the basic session mechanism is this:
-* take some data, pickle it, store it somewhere.
-* assign an id to it. run that id through a HMAC (NOT just a hash function) to prevent tampering.
-* put the id and HMAC output in a cookie.
-* when you get a request, load the id, verify the HMAC. if it matches, load the data from wherever you put it and depickle it.
-
-
-"""
 import pylibmc as memcache
 import pickle
 import os.path
@@ -56,21 +29,10 @@ class SessionManager(object):
 
 
     def _read(self, session_id):
-	"""
-	session_path = self._get_session_path(session_id)
-	try :
-	    data = pickle.load(open(session_path))
-	    if type(data) == type({}):
-		return data
-	    else:
-		return {}
-	except IOError:
-	    return {}
-        """
-	if not session_id:
-	    return {}
-	mc = memcache.Client(session_mc)
-	return pickle.loads(mc.get(session_id) or pickle.dumps({})) or {}
+        if not session_id:
+            return {}
+        mc = memcache.Client(session_mc)
+        return pickle.loads(mc.get(session_id) or pickle.dumps({})) or {}
 
     def get(self, session_id = None, hmac_digest = None):
         # set up the session state (create it from scratch, or from parameters
@@ -103,8 +65,8 @@ class SessionManager(object):
         return os.path.join(self.session_dir, 'SESSION' + str(session_id))
 
     def set(self, session):
-	mc = memcache.Client(session_mc)
-	mc.set(session.session_id, pickle.dumps(dict(session.items())))
+        mc = memcache.Client(session_mc)
+        mc.set(session.session_id, pickle.dumps(dict(session.items())))
 
 
     def _get_hmac_digest(self, session_id):
